@@ -79,7 +79,6 @@ class App extends Component<AppProps, AppState> {
       ...prevState,
       inputValue: value,
     }));
-    console.log(value, this.state.inputValue);
   };
 
   searchHandler = (value: string) => {

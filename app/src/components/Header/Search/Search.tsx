@@ -13,8 +13,6 @@ class Search extends Component<SearchProps> {
   inputRef = createRef<HTMLInputElement>();
 
   render() {
-    console.log(this.props.inputValue);
-
     return (
       <div className={styles.search}>
         <input
@@ -25,7 +23,6 @@ class Search extends Component<SearchProps> {
           ref={this.inputRef}
           value={this.props.inputValue}
           onChange={() => {
-            console.log(this.inputRef.current?.value);
             this.props.changeInputHandler(this.inputRef.current?.value || '');
           }}
         />
