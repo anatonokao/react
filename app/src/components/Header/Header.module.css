@@ -33,8 +33,6 @@
     color: black;
     border-radius: 50px;
     transition: all .3s ease;
-
-    /*flex-basis: 20%;*/
 }
 
 .throwErrorBtn:hover {
