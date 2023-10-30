@@ -8,8 +8,12 @@ import Loading from './assets/Loading.gif';
 interface AppState {
   error: boolean;
   isLoaded: boolean;
+  searchValue: string;
   results: HttpResponse;
+  inputValue: string;
 }
+
+interface AppProps {}
 
 interface HttpResponse {
   count: number;
@@ -19,16 +23,20 @@ interface HttpResponse {
 }
 
 export async function http<T>(request: string): Promise<T> {
-  const response = await fetch(request);
+  const response = await fetch(request).catch((error) => {
+    return error;
+  });
   return await response.json();
 }
 
-class App extends Component<AppState, AppState> {
+class App extends Component<AppProps, AppState> {
   constructor(props: AppState) {
     super(props);
     this.state = {
+      searchValue: localStorage.getItem('request') || '',
+      inputValue: localStorage.getItem('request') || '',
       error: false,
-      isLoaded: false,
+      isLoaded: true,
       results: {
         count: 0,
         next: '',
@@ -39,42 +47,66 @@ class App extends Component<AppState, AppState> {
   }
 
   async componentDidMount() {
-    console.log(11111);
-    this.setState((prevState) => ({ ...prevState, isLoaded: false }));
-    http<HttpResponse>('https://swapi.dev/api/people/').then((result) => {
-      this.setState({
-        error: false,
-        isLoaded: true,
-        results: result,
-      });
-    });
+    if (this.state.inputValue) {
+      this.setState((prevState) => ({ ...prevState, isLoaded: false }));
+      http<HttpResponse>(
+        `https://swapi.dev/api/people?search=${this.state.inputValue}`
+      )
+        .then((result) => {
+          this.setState((prevState) => ({
+            ...prevState,
+            error: false,
+            isLoaded: true,
+            results: result,
+          }));
+        })
+        .catch((error) => {
+          console.log(error);
+          this.setState((prev) => ({ ...prev, error: true }));
+        });
+    }
   }
 
+  throwError = () => {
+    this.setState((prevState) => ({
+      ...prevState,
+      error: true,
+    }));
+  };
+
+  changeInputHandler = (value: string) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      inputValue: value,
+    }));
+    console.log(value, this.state.inputValue);
+  };
+
   searchHandler = (value: string) => {
-    console.log(value);
     this.setState((prevState) => ({
       ...prevState,
       isLoaded: false,
-      searchValue: value,
+      searchValue: value.trim(),
     }));
-    http<HttpResponse>(`https://swapi.dev/api/people?search=${value}`).then(
-      (result) => {
-        this.setState({
-          error: false,
-          isLoaded: true,
-          results: result,
-        });
-      }
-    );
+    http<HttpResponse>(
+      `https://swapi.dev/api/people?search=${value.trim()}`
+    ).then((result) => {
+      this.setState((prevState) => ({
+        ...prevState,
+        error: false,
+        isLoaded: true,
+        results: result,
+      }));
+    });
+    localStorage.setItem('request', value);
   };
 
   render() {
     const { error, isLoaded, results } = this.state;
     const resultsItems: Item[] = results.results;
 
-    if (error) {
-      return <>ERROR!!!!!</>;
-    } else if (!isLoaded) {
+    if (error) throw new Error("I'm crashed!");
+    else if (!isLoaded) {
       return (
         <div className="wrapper">
           <div className="loading">
@@ -83,13 +115,23 @@ class App extends Component<AppState, AppState> {
         </div>
       );
     } else {
-      console.log(this.state);
-
       return (
         <div className="wrapper">
-          <Header searchHandler={this.searchHandler} />
-          <SearchingResults items={resultsItems} />
-          {/*<Footer/>*/}
+          <Header
+            searchHandler={this.searchHandler}
+            searchValue={this.state.searchValue}
+            inputValue={this.state.inputValue}
+            changeInputHandler={this.changeInputHandler}
+            throwError={this.throwError}
+          />
+          {this.state.results.results.length ? (
+            <SearchingResults items={resultsItems} />
+          ) : (
+            <p className="weCantFind">
+              We cant find anything <br /> (Try: R2D2, Darth Vader and other
+              characters )
+            </p>
+          )}
         </div>
       );
     }
