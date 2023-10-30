@@ -2,11 +2,15 @@ import React from 'react';
 import Search from './Search/Search';
 import styles from './Header.module.css';
 
-class Header extends React.Component {
+interface HeaderProps {
+  searchHandler: (value: string) => void;
+}
+
+class Header extends React.Component<HeaderProps> {
   render() {
     return (
       <header className={styles.header + ' ' + '_container'}>
-        <Search />
+        <Search searchHandler={this.props.searchHandler} />
       </header>
     );
   }
