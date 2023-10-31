@@ -103,7 +103,7 @@ class App extends Component<AppProps, AppState> {
   render() {
     const { error, isLoaded, results } = this.state;
     const resultsItems: Item[] = results.results;
-
+  let i;
     if (error) throw new Error("I'm crashed!");
     else if (!isLoaded) {
       return (
