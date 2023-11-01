@@ -29,8 +29,7 @@ class Search extends Component<SearchProps> {
         <button
           className={styles.searchButton}
           onClick={() => {
-            if (this.inputRef.current && this.inputRef.current.value)
-              this.props.searchHandler(this.inputRef.current.value);
+            this.props.searchHandler(this.inputRef.current?.value || '');
           }}
         >
           Search
