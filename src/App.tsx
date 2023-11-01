@@ -47,7 +47,6 @@ class App extends Component<AppProps, AppState> {
   }
 
   async componentDidMount() {
-    if (this.state.inputValue) {
       this.setState((prevState) => ({ ...prevState, isLoaded: false }));
       http<HttpResponse>(
         `https://swapi.dev/api/people?search=${this.state.inputValue}`
@@ -63,8 +62,7 @@ class App extends Component<AppProps, AppState> {
         .catch((error) => {
           console.log(error);
           this.setState((prev) => ({ ...prev, error: true }));
-        });
-    }
+        })
   }
 
   throwError = () => {
@@ -103,7 +101,6 @@ class App extends Component<AppProps, AppState> {
   render() {
     const { error, isLoaded, results } = this.state;
     const resultsItems: Item[] = results.results;
-  let i;
     if (error) throw new Error("I'm crashed!");
     else if (!isLoaded) {
       return (
