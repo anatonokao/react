@@ -1,5 +1,5 @@
 import './App.css';
-import React, { Component } from 'react';
+import React, { FC, useState } from 'react';
 import Header from './components/Header/Header';
 import SearchingResults from './components/SearchingResults/SearchingResults';
 import { Item } from './types/Interfaces';
@@ -13,13 +13,10 @@ interface AppState {
   inputValue: string;
 }
 
-interface AppProps {}
-
 interface HttpResponse {
-  count: number;
-  next: string;
-  previous: string;
-  results: Item[];
+  kind: string;
+  totalItems: number;
+  items: Item[];
 }
 
 export async function http<T>(request: string): Promise<T> {
@@ -29,66 +26,76 @@ export async function http<T>(request: string): Promise<T> {
   return await response.json();
 }
 
-class App extends Component<AppProps, AppState> {
-  constructor(props: AppState) {
-    super(props);
-    this.state = {
-      searchValue: localStorage.getItem('request') || '',
-      inputValue: localStorage.getItem('request') || '',
-      error: false,
-      isLoaded: true,
-      results: {
-        count: 0,
-        next: '',
-        previous: '',
-        results: [],
-      },
-    };
-  }
+const App: FC = () => {
+  const [state, setState] = useState<AppState>({
+    searchValue: localStorage.getItem('request') || '',
+    inputValue: localStorage.getItem('request') || '',
+    error: false,
+    isLoaded: true,
+    results: {
+      kind: '',
+      totalItems: 0,
+      items: [],
+    },
+  });
+  // constructor(props: AppState) {
+  //   super(props);
+  //   this.state = {
+  //     searchValue: localStorage.getItem('request') || '',
+  //     inputValue: localStorage.getItem('request') || '',
+  //     error: false,
+  //     isLoaded: true,
+  //     results: {
+  //       kind: '',
+  //       totalItems: 0,
+  //       items: []
+  //     },
+  //   };
+  // }
 
-  async componentDidMount() {
-      this.setState((prevState) => ({ ...prevState, isLoaded: false }));
-      http<HttpResponse>(
-        `https://swapi.dev/api/people?search=${this.state.inputValue}`
-      )
-        .then((result) => {
-          this.setState((prevState) => ({
-            ...prevState,
-            error: false,
-            isLoaded: true,
-            results: result,
-          }));
-        })
-        .catch((error) => {
-          console.log(error);
-          this.setState((prev) => ({ ...prev, error: true }));
-        })
-  }
+  // async componentDidMount() {
+  // this.setState((prevState) => ({ ...prevState, isLoaded: false }));
+  // http<HttpResponse>(
+  //   `https://www.googleapis.com/books/v1/volumes?q=${this.state.inputValue}&key=AIzaSyDYIbMfKgnY0ApGq1a3hM2Z3-g1GlqYa7o`
+  // )
+  //   .then((result) => {
+  //     this.setState((prevState) => ({
+  //       ...prevState,
+  //       error: false,
+  //       isLoaded: true,
+  //       results: result,
+  //     }));
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //     this.setState((prev) => ({ ...prev, error: true }));
+  //   });
+  // }
 
-  throwError = () => {
-    this.setState((prevState) => ({
+  const throwError = () => {
+    setState((prevState) => ({
       ...prevState,
       error: true,
     }));
   };
 
-  changeInputHandler = (value: string) => {
-    this.setState((prevState) => ({
+  const changeInputHandler = (value: string) => {
+    setState((prevState) => ({
       ...prevState,
       inputValue: value,
     }));
   };
 
-  searchHandler = (value: string) => {
-    this.setState((prevState) => ({
+  const searchHandler = (value: string) => {
+    setState((prevState) => ({
       ...prevState,
       isLoaded: false,
       searchValue: value.trim(),
     }));
     http<HttpResponse>(
-      `https://swapi.dev/api/people?search=${value.trim()}`
+      `https://www.googleapis.com/books/v1/volumes?q=${value.trim()}&key=AIzaSyDYIbMfKgnY0ApGq1a3hM2Z3-g1GlqYa7o`
     ).then((result) => {
-      this.setState((prevState) => ({
+      setState((prevState) => ({
         ...prevState,
         error: false,
         isLoaded: true,
@@ -98,40 +105,39 @@ class App extends Component<AppProps, AppState> {
     localStorage.setItem('request', value);
   };
 
-  render() {
-    const { error, isLoaded, results } = this.state;
-    const resultsItems: Item[] = results.results;
-    if (error) throw new Error("I'm crashed!");
-    else if (!isLoaded) {
-      return (
-        <div className="wrapper">
-          <div className="loading">
-            <img src={Loading} alt="Loading" />
-          </div>
+  const resultsItems: Item[] = state.results.items;
+
+  if (state.error) throw new Error("I'm crashed!");
+  else if (!state.isLoaded) {
+    return (
+      <div className="wrapper">
+        <div className="loading">
+          <img src={Loading} alt="Loading" />
         </div>
-      );
-    } else {
-      return (
-        <div className="wrapper">
-          <Header
-            searchHandler={this.searchHandler}
-            searchValue={this.state.searchValue}
-            inputValue={this.state.inputValue}
-            changeInputHandler={this.changeInputHandler}
-            throwError={this.throwError}
-          />
-          {this.state.results.results.length ? (
-            <SearchingResults items={resultsItems} />
-          ) : (
-            <p className="weCantFind">
-              We cant find anything <br /> (Try: R2D2, Darth Vader and other
-              characters )
-            </p>
-          )}
-        </div>
-      );
-    }
+      </div>
+    );
+  } else {
+    return (
+      // const { error, isLoaded, results } = this.state;
+      <div className="wrapper">
+        <Header
+          searchHandler={searchHandler}
+          searchValue={state.searchValue}
+          inputValue={state.inputValue}
+          changeInputHandler={changeInputHandler}
+          throwError={throwError}
+        />
+        {state.results.items.length ? (
+          <SearchingResults items={resultsItems} />
+        ) : (
+          <p className="weCantFind">
+            We cant find anything <br /> (Try: R2D2, Darth Vader and other
+            characters )
+          </p>
+        )}
+      </div>
+    );
   }
-}
+};
 
 export default App;
