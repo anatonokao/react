@@ -1,7 +1,14 @@
-.itemsContainer {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-  padding: 60px 15px 15px 15px;
+.body {
+    padding: 20px;
+    display: flex;
+    position: relative;
 }
+
+.itemsContainer {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+

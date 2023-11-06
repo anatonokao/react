@@ -1,0 +1,23 @@
+.pagination {
+    padding: 10px;
+    /*background-color: #6b6b6b;*/
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.btn {
+    padding: 5px 10px;
+    background-color: #858585;
+    border-radius: 5px;
+    color: white;
+    transition: all .3s ease;
+}
+
+.btn:hover {
+    background-color: #5d5d5d;
+}
+
+.page_number {
+}

@@ -1,16 +1,18 @@
 import './App.css';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Header from './components/Header/Header';
 import SearchingResults from './components/SearchingResults/SearchingResults';
 import { Item } from './types/Interfaces';
 import Loading from './assets/Loading.gif';
+// import search from './components/Header/Search/Search';
+import { searchBooks } from './API/API';
+import { useSearchParams } from 'react-router-dom';
 
 interface AppState {
   error: boolean;
   isLoaded: boolean;
   searchValue: string;
   results: HttpResponse;
-  inputValue: string;
 }
 
 interface HttpResponse {
@@ -19,17 +21,9 @@ interface HttpResponse {
   items: Item[];
 }
 
-export async function http<T>(request: string): Promise<T> {
-  const response = await fetch(request).catch((error) => {
-    return error;
-  });
-  return await response.json();
-}
-
 const App: FC = () => {
   const [state, setState] = useState<AppState>({
     searchValue: localStorage.getItem('request') || '',
-    inputValue: localStorage.getItem('request') || '',
     error: false,
     isLoaded: true,
     results: {
@@ -38,39 +32,35 @@ const App: FC = () => {
       items: [],
     },
   });
-  // constructor(props: AppState) {
-  //   super(props);
-  //   this.state = {
-  //     searchValue: localStorage.getItem('request') || '',
-  //     inputValue: localStorage.getItem('request') || '',
-  //     error: false,
-  //     isLoaded: true,
-  //     results: {
-  //       kind: '',
-  //       totalItems: 0,
-  //       items: []
-  //     },
-  //   };
-  // }
+  const [page, setPage] = useState(1);
+  const [countPerPage, setCountPerPage] = useState(20);
 
-  // async componentDidMount() {
-  // this.setState((prevState) => ({ ...prevState, isLoaded: false }));
-  // http<HttpResponse>(
-  //   `https://www.googleapis.com/books/v1/volumes?q=${this.state.inputValue}&key=AIzaSyDYIbMfKgnY0ApGq1a3hM2Z3-g1GlqYa7o`
-  // )
-  //   .then((result) => {
-  //     this.setState((prevState) => ({
-  //       ...prevState,
-  //       error: false,
-  //       isLoaded: true,
-  //       results: result,
-  //     }));
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //     this.setState((prev) => ({ ...prev, error: true }));
-  //   });
-  // }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [params, setParams] = useSearchParams();
+
+  useEffect(() => {
+    setState((prevState) => ({ ...prevState, isLoaded: false }));
+    searchBooks<HttpResponse>(
+      state.searchValue,
+      (page - 1) * countPerPage,
+      countPerPage || 20
+    )
+      .then((result) => {
+        setState((prevState) => ({
+          ...prevState,
+          isLoaded: true,
+          results: result,
+        }));
+        setParams({
+          page: page.toString(),
+        });
+        localStorage.setItem('request', state.searchValue);
+      })
+      .catch((error) => {
+        console.log(error);
+        setState((prev) => ({ ...prev, error: true }));
+      });
+  }, [state.searchValue, page, countPerPage, setParams]);
 
   const throwError = () => {
     setState((prevState) => ({
@@ -79,30 +69,24 @@ const App: FC = () => {
     }));
   };
 
-  const changeInputHandler = (value: string) => {
-    setState((prevState) => ({
-      ...prevState,
-      inputValue: value,
-    }));
-  };
-
   const searchHandler = (value: string) => {
     setState((prevState) => ({
       ...prevState,
-      isLoaded: false,
       searchValue: value.trim(),
     }));
-    http<HttpResponse>(
-      `https://www.googleapis.com/books/v1/volumes?q=${value.trim()}&key=AIzaSyDYIbMfKgnY0ApGq1a3hM2Z3-g1GlqYa7o`
-    ).then((result) => {
-      setState((prevState) => ({
-        ...prevState,
-        error: false,
-        isLoaded: true,
-        results: result,
-      }));
-    });
-    localStorage.setItem('request', value);
+  };
+
+  const updatePage = (vector: 'next' | 'prev') => {
+    if (vector === 'next' && state.results.totalItems > page * countPerPage) {
+      setPage((prevPage) => prevPage + 1);
+    } else if (vector === 'prev' && page * countPerPage > countPerPage) {
+      setPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const updateCountPerPage = (count: number): void => {
+    setPage(1);
+    setCountPerPage(count);
   };
 
   const resultsItems: Item[] = state.results.items;
@@ -118,17 +102,22 @@ const App: FC = () => {
     );
   } else {
     return (
-      // const { error, isLoaded, results } = this.state;
       <div className="wrapper">
         <Header
           searchHandler={searchHandler}
           searchValue={state.searchValue}
-          inputValue={state.inputValue}
-          changeInputHandler={changeInputHandler}
           throwError={throwError}
         />
-        {state.results.items.length ? (
-          <SearchingResults items={resultsItems} />
+        {state.results.totalItems ? (
+          <div className="content">
+            <SearchingResults
+              items={resultsItems}
+              updatePage={updatePage}
+              currentPage={page}
+              countPerPage={countPerPage}
+              updateCountPerPage={updateCountPerPage}
+            />
+          </div>
         ) : (
           <p className="weCantFind">
             We cant find anything <br /> (Try: R2D2, Darth Vader and other

@@ -1,18 +1,32 @@
 export interface Item {
-  name: string;
-  height: string;
-  mass: string;
-  hair_color: string;
-  skin_color: string;
-  eye_color: string;
-  birth_year: string;
-  gender: string;
-  homeworld: string;
-  films: string[];
-  species: string[];
-  vehicles: string[];
-  starships: string[];
-  created: string;
-  edited: string;
-  url: string;
+  kind: string;
+  id: string;
+  etag: string;
+  selfLink: string;
+  volumeInfo: VolumeInfo;
+  saleInfo: {
+    listPrice: {
+      amount: number,
+      currencyCode: string
+    },
+    buyLink: string
+  };
+  searchInfo: {
+    textSnippet: string
+  }
+}
+
+interface VolumeInfo {
+  title: string,
+  subtitle: string,
+  authors: string[],
+  publisher: string,
+  publishedDate: string,
+  description: string,
+  pageCount: number,
+  imageLinks: {
+    smallThumbnail: string,
+    thumbnail: string
+  }
+  language: string
 }
