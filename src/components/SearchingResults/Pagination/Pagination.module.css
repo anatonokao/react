@@ -20,4 +20,20 @@
 }
 
 .page_number {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.countSelector {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #5e5e5e;
+    color: white;
+    transition: all .3s ease;
+    font-family: "Roboto", sans-serif;
+}
+
+.countSelector:hover {
+    background-color: #dcdcdc;
+    color: #363636;
 }

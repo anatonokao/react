@@ -27,6 +27,7 @@ const Pagination: FC<PaginationProps> = (props) => {
         {'🡆'}
       </button>
       <select
+        className={styles.countSelector}
         name="maxCount"
         id="maxCount"
         onChange={(e) => props.updateCountPerPage(Number(e.target.value))}
