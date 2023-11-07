@@ -63,11 +63,6 @@ const Details: FC = () => {
           <img src="/src/assets/close-btn.svg" alt="close" />
         </button>
       </NavLink>
-      {/*<NavLink*/}
-      {/*  to={`/details/${item.id}?page=${props.currentPage}`}*/}
-      {/*  key={props.item.id}*/}
-      {/*  onClick={() => setDetails(true)}*/}
-      {/*></NavLink>*/}
       <div className={styles.title}>{book.volumeInfo.title}</div>
       <img
         src={
@@ -96,11 +91,11 @@ const Details: FC = () => {
           target="_blank"
           rel="noreferrer"
         >
-          Купить
+          Buy
         </a>
       ) : (
         <a className={styles.buyLink} target="_blank" rel="noreferrer">
-          Недоступно
+          Unavailable
         </a>
       )}
     </div>

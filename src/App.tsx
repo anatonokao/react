@@ -4,7 +4,6 @@ import Header from './components/Header/Header';
 import SearchingResults from './components/SearchingResults/SearchingResults';
 import { Item } from './types/Interfaces';
 import Loading from './assets/Loading.gif';
-// import search from './components/Header/Search/Search';
 import { searchBooks } from './API/API';
 import { useSearchParams } from 'react-router-dom';
 
@@ -118,8 +117,8 @@ const App: FC = () => {
           </div>
         ) : (
           <p className="weCantFind">
-            We cant find anything <br /> (Try: R2D2, Darth Vader and other
-            characters )
+            We cant find anything <br /> (Try: Lovecraft, Толстой, Necronomicon,
+            Война и Мир and other )
           </p>
         )}
       </div>

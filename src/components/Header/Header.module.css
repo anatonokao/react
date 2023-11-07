@@ -1,39 +1,44 @@
 .header {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 25px;
+    width: 100%;
 }
 
 .logoAndBtn {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 .search {
-  width: auto;
-  display: flex;
-  justify-content: center;
+    width: auto;
+    display: flex;
+    justify-content: center;
 }
 
 .title {
-  font-size: 30px;
-  text-align: center;
+    font-size: 30px;
+    text-align: center;
+    line-height: normal;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: "Roboto", sans-serif;
 }
 
 .throwErrorBtn {
-  background-color: #c99e9e;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  height: 40px;
-  padding: 10px;
-  color: black;
-  border-radius: 50px;
-  transition: all 0.3s ease;
+    background-color: #c99e9e;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    height: 40px;
+    padding: 10px;
+    color: black;
+    border-radius: 50px;
+    transition: all 0.3s ease;
 }
 
 .throwErrorBtn:hover {
-  background-color: #8d1a1a;
-  color: white;
+    background-color: #8d1a1a;
+    color: white;
 }

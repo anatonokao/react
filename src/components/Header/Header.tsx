@@ -5,8 +5,6 @@ import styles from './Header.module.css';
 interface HeaderProps {
   searchHandler: (value: string) => void;
   searchValue: string;
-  // inputValue: string;
-  // changeInputHandler: (value: string) => void;
   throwError: () => void;
 }
 
@@ -14,9 +12,7 @@ const Header: FC<HeaderProps> = (props) => {
   return (
     <header className={styles.header + ' ' + '_container'}>
       <div className={styles.logoAndBtn}>
-        <h1 className={styles.title}>
-          StarWars <br /> Characters
-        </h1>
+        <h1 className={styles.title}>Books Store</h1>
         <button
           className={styles.throwErrorBtn}
           onClick={() => {
@@ -30,8 +26,6 @@ const Header: FC<HeaderProps> = (props) => {
         <Search
           searchHandler={props.searchHandler}
           searchValue={props.searchValue}
-          // inputValue={props.inputValue}
-          // changeInputHandler={props.changeInputHandler}
         />
       </div>
     </header>

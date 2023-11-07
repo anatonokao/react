@@ -4,8 +4,6 @@ import styles from './Search.module.css';
 interface SearchProps {
   searchHandler: (value: string) => void;
   searchValue: string;
-  // inputValue: string;
-  // changeInputHandler: (value: string) => void;
 }
 
 const Search: FC<SearchProps> = (props) => {
@@ -26,6 +24,11 @@ const Search: FC<SearchProps> = (props) => {
         value={inputValue}
         onChange={() => {
           setInputValue(inputRef.current?.value || '');
+        }}
+        onKeyDown={(e) => {
+          console.log(e);
+          if (e.code === 'Enter')
+            props.searchHandler(inputRef.current?.value || '');
         }}
       />
       <button
