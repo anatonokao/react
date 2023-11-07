@@ -14,14 +14,14 @@ import Details from './components/Details/Details';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      path="/"
+      path="/react/react-routing/"
       element={
         <ErrorBoundary>
           <App />
         </ErrorBoundary>
       }
     >
-      <Route path="/details/:id" element={<Details />} />
+      <Route path="details/:id" element={<Details />} />
     </Route>
   )
 );

@@ -26,7 +26,6 @@ const Search: FC<SearchProps> = (props) => {
           setInputValue(inputRef.current?.value || '');
         }}
         onKeyDown={(e) => {
-          console.log(e);
           if (e.code === 'Enter')
             props.searchHandler(inputRef.current?.value || '');
         }}

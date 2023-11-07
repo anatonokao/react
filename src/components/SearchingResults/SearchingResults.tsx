@@ -30,14 +30,14 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
           className={styles.itemsContainer}
           onClick={() => {
             if (details) {
-              navigate(`/?page=${props.currentPage}`);
+              navigate(`/react/react-routing/?page=${props.currentPage}`);
               setDetails(false);
             }
           }}
         >
           {items.map((item) => (
             <NavLink
-              to={`/details/${item.id}?page=${props.currentPage}`}
+              to={`details/${item.id}?page=${props.currentPage}`}
               key={item.id}
               onClick={() => setDetails(true)}
             >

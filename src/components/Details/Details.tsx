@@ -54,7 +54,7 @@ const Details: FC = () => {
     </div>
   ) : (
     <div className={styles.details}>
-      <NavLink to={`/?page=${context.currentPage}`}>
+      <NavLink to={`/react/react-routing/?page=${context.currentPage}`}>
         <button
           type="button"
           className={styles.closeBtn}
