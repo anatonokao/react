@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import SearchingResultsItem from './SearchingResultsItem/SearchingResultsItem';
 import { Item } from '../../types/Interfaces';
 import styles from './SearchingResults.module.css';
 import Pagination from './Pagination/Pagination';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 export interface SearchingResultsProps {
   items: Item[];
@@ -15,6 +15,8 @@ export interface SearchingResultsProps {
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
   const items: Item[] = props.items;
+  const [details, setDetails] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <Pagination
@@ -24,14 +26,26 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
         updateCountPerPage={props.updateCountPerPage}
       />
       <div className={styles.body}>
-        <div className={styles.itemsContainer}>
+        <div
+          className={styles.itemsContainer}
+          onClick={() => {
+            if (details) {
+              navigate(`/?page=${props.currentPage}`);
+              setDetails(false);
+            }
+          }}
+        >
           {items.map((item) => (
-            <NavLink to={`/details/${item.id}`} key={item.id}>
+            <NavLink
+              to={`/details/${item.id}?page=${props.currentPage}`}
+              key={item.id}
+              onClick={() => setDetails(true)}
+            >
               <SearchingResultsItem key={item.id} item={item} />
             </NavLink>
           ))}
         </div>
-        <Outlet />
+        <Outlet context={{ setDetails, currentPage: props.currentPage }} />
       </div>
     </>
   );

@@ -35,9 +35,7 @@ const App: FC = () => {
   const [page, setPage] = useState(1);
   const [countPerPage, setCountPerPage] = useState(20);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [params, setParams] = useSearchParams();
-
+  const [, setParams] = useSearchParams();
   useEffect(() => {
     setState((prevState) => ({ ...prevState, isLoaded: false }));
     searchBooks<HttpResponse>(

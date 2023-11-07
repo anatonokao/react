@@ -12,10 +12,11 @@ const SearchingResultsItem: FC<SearchingResultsItemProps> = (props) => {
       <div className={styles.name}>{props.item.volumeInfo.title}</div>
       <img
         src={
-          props.item.volumeInfo.imageLinks &&
-          props.item.volumeInfo.imageLinks.thumbnail
+          (props.item.volumeInfo.imageLinks &&
+            props.item.volumeInfo.imageLinks.thumbnail) ||
+          '/src/assets/no-image.png'
         }
-        alt=""
+        alt="thumbnail"
       />
       <div className={styles.stat}>{props.item.volumeInfo.authors}</div>
       <div className={`${styles.stat} ${styles.description}`}>

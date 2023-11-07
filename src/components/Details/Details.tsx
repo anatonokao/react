@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './Details.module.css';
+import Loading from '/src/assets/Loading.gif';
 import { getBook } from '../../API/API';
-import { useParams } from 'react-router-dom';
+import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import { Item } from '../../types/Interfaces';
+import parse from 'html-react-parser';
 
-const Details = () => {
+interface DetailsRouteContext {
+  setDetails: (value: boolean) => void;
+  currentPage: number;
+}
+
+const Details: FC = () => {
+  const context: DetailsRouteContext = useOutletContext();
   const { id } = useParams();
-
+  const [isLoad, setIsLoad] = useState(false);
   const [book, setBook] = useState<Item>({
     etag: '',
     id: '',
@@ -31,14 +39,35 @@ const Details = () => {
   });
 
   useEffect(() => {
-    if (id)
+    if (id) {
+      setIsLoad(true);
       getBook<Item>(id).then((res) => {
         setBook(res);
+        setIsLoad(false);
       });
+    }
   }, [id]);
 
-  return (
+  return isLoad ? (
+    <div className={styles.loading}>
+      <img className={styles.loading} src={Loading} alt="loading" />
+    </div>
+  ) : (
     <div className={styles.details}>
+      <NavLink to={`/?page=${context.currentPage}`}>
+        <button
+          type="button"
+          className={styles.closeBtn}
+          onClick={() => context.setDetails(false)}
+        >
+          <img src="/src/assets/close-btn.svg" alt="close" />
+        </button>
+      </NavLink>
+      {/*<NavLink*/}
+      {/*  to={`/details/${item.id}?page=${props.currentPage}`}*/}
+      {/*  key={props.item.id}*/}
+      {/*  onClick={() => setDetails(true)}*/}
+      {/*></NavLink>*/}
       <div className={styles.title}>{book.volumeInfo.title}</div>
       <img
         src={
@@ -50,7 +79,7 @@ const Details = () => {
         alt="Thumbnail"
       />
       <div className={styles.description}>
-        {book.volumeInfo.description || 'No description'}
+        {parse(book.volumeInfo.description || 'No description')}
       </div>
       {book.saleInfo.listPrice ? (
         <div className={styles.price}>
