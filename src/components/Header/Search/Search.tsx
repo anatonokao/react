@@ -1,15 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import styles from './Search.module.css';
+import { AppContext } from '../../../contexts/AppContext/AppContextProvider';
 
-interface SearchProps {
-  searchHandler: (value: string) => void;
-  searchValue: string;
-}
+const Search: FC = () => {
+  const { request, setRequest } = useContext(AppContext);
 
-const Search: FC<SearchProps> = (props) => {
-  const [inputValue, setInputValue] = useState(
-    localStorage.getItem('request') || ''
-  );
+  const [inputValue, setInputValue] = useState(request);
 
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -26,14 +22,13 @@ const Search: FC<SearchProps> = (props) => {
           setInputValue(inputRef.current?.value || '');
         }}
         onKeyDown={(e) => {
-          if (e.code === 'Enter')
-            props.searchHandler(inputRef.current?.value || '');
+          if (e.code === 'Enter') setRequest(inputRef.current?.value || '');
         }}
       />
       <button
         className={styles.searchButton}
         onClick={() => {
-          props.searchHandler(inputRef.current?.value || '');
+          setRequest(inputRef.current?.value || '');
         }}
       >
         Search

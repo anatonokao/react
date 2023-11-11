@@ -1,12 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import SearchingResultsItem from './SearchingResultsItem/SearchingResultsItem';
 import { Item } from '../../types/Interfaces';
 import styles from './SearchingResults.module.css';
 import Pagination from './Pagination/Pagination';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { AppContext } from '../../contexts/AppContext/AppContextProvider';
 
 export interface SearchingResultsProps {
-  items: Item[];
   updatePage: (vector: 'next' | 'prev') => void;
   currentPage: number;
   countPerPage: number;
@@ -14,7 +14,9 @@ export interface SearchingResultsProps {
 }
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
-  const items: Item[] = props.items;
+  console.log('main');
+  const { response } = useContext(AppContext);
+  const items: Item[] = response.items;
   const [details, setDetails] = useState(false);
   const navigate = useNavigate();
   return (

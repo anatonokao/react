@@ -10,6 +10,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import Details from './components/Details/Details';
+import { AppContextProvider } from './contexts/AppContext/AppContextProvider';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +18,9 @@ const router = createBrowserRouter(
       path="/react/react-routing/"
       element={
         <ErrorBoundary>
-          <App />
+          <AppContextProvider>
+            <App />
+          </AppContextProvider>
         </ErrorBoundary>
       }
     >

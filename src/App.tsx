@@ -1,44 +1,44 @@
 import './App.css';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Header from './components/Header/Header';
 import SearchingResults from './components/SearchingResults/SearchingResults';
 import { Item } from './types/Interfaces';
 import Loading from './assets/Loading.gif';
 import { searchBooks } from './API/API';
 import { useSearchParams } from 'react-router-dom';
+import { AppContext } from './contexts/AppContext/AppContextProvider';
 
 interface AppState {
   error: boolean;
   isLoaded: boolean;
-  searchValue: string;
-  results: HttpResponse;
 }
 
-interface HttpResponse {
+export interface HttpResponse {
   kind: string;
   totalItems: number;
   items: Item[];
 }
 
 const App: FC = () => {
+  const { request } = useContext(AppContext);
+  const { response, setResponse } = useContext(AppContext);
+
   const [state, setState] = useState<AppState>({
-    searchValue: localStorage.getItem('request') || '',
     error: false,
     isLoaded: true,
-    results: {
-      kind: '',
-      totalItems: 0,
-      items: [],
-    },
   });
-  const [page, setPage] = useState(1);
+
+  const pageFromParams = Number(useSearchParams()[0].get('page'));
+
+  const [page, setPage] = useState(pageFromParams || 1);
   const [countPerPage, setCountPerPage] = useState(20);
 
   const [, setParams] = useSearchParams();
+
   useEffect(() => {
     setState((prevState) => ({ ...prevState, isLoaded: false }));
     searchBooks<HttpResponse>(
-      state.searchValue,
+      request,
       (page - 1) * countPerPage,
       countPerPage || 20
     )
@@ -46,18 +46,18 @@ const App: FC = () => {
         setState((prevState) => ({
           ...prevState,
           isLoaded: true,
-          results: result,
         }));
+        setResponse(result);
         setParams({
           page: page.toString(),
         });
-        localStorage.setItem('request', state.searchValue);
+        localStorage.setItem('request', request);
       })
       .catch((error) => {
         console.log(error);
         setState((prev) => ({ ...prev, error: true }));
       });
-  }, [state.searchValue, page, countPerPage, setParams]);
+  }, [request, page, countPerPage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const throwError = () => {
     setState((prevState) => ({
@@ -74,7 +74,7 @@ const App: FC = () => {
   };
 
   const updatePage = (vector: 'next' | 'prev') => {
-    if (vector === 'next' && state.results.totalItems > page * countPerPage) {
+    if (vector === 'next' && response.totalItems > page * countPerPage) {
       setPage((prevPage) => prevPage + 1);
     } else if (vector === 'prev' && page * countPerPage > countPerPage) {
       setPage((prevPage) => prevPage - 1);
@@ -85,8 +85,6 @@ const App: FC = () => {
     setPage(1);
     setCountPerPage(count);
   };
-
-  const resultsItems: Item[] = state.results.items;
 
   if (state.error) throw new Error("I'm crashed!");
   else if (!state.isLoaded) {
@@ -100,15 +98,10 @@ const App: FC = () => {
   } else {
     return (
       <div className="wrapper">
-        <Header
-          searchHandler={searchHandler}
-          searchValue={state.searchValue}
-          throwError={throwError}
-        />
-        {state.results.totalItems ? (
+        <Header searchHandler={searchHandler} throwError={throwError} />
+        {response.totalItems ? (
           <div className="content">
             <SearchingResults
-              items={resultsItems}
               updatePage={updatePage}
               currentPage={page}
               countPerPage={countPerPage}

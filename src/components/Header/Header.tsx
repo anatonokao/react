@@ -4,7 +4,6 @@ import styles from './Header.module.css';
 
 interface HeaderProps {
   searchHandler: (value: string) => void;
-  searchValue: string;
   throwError: () => void;
 }
 
@@ -23,10 +22,7 @@ const Header: FC<HeaderProps> = (props) => {
         </button>
       </div>
       <div className={styles.search}>
-        <Search
-          searchHandler={props.searchHandler}
-          searchValue={props.searchValue}
-        />
+        <Search />
       </div>
     </header>
   );
