@@ -40,9 +40,12 @@ export const AppContextProvider: FC<AppContextProviderProps> = ({
     items: [],
   });
 
-  return (
-    <AppContext.Provider value={{ request, setRequest, response, setResponse }}>
-      {children}
-    </AppContext.Provider>
-  );
+  const value = {
+    request,
+    setRequest,
+    response,
+    setResponse,
+  };
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

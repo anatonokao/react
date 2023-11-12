@@ -24,12 +24,14 @@ const Search: FC = () => {
         onKeyDown={(e) => {
           if (e.code === 'Enter') setRequest(inputRef.current?.value || '');
         }}
+        data-testid="search-input"
       />
       <button
         className={styles.searchButton}
         onClick={() => {
           setRequest(inputRef.current?.value || '');
         }}
+        data-testid="search-button"
       >
         Search
       </button>
