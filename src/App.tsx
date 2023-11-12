@@ -109,7 +109,7 @@ const App: FC = () => {
             />
           </div>
         ) : (
-          <p className="weCantFind">
+          <p className="weCantFind" data-testid="nothing-found">
             We cant find anything <br /> (Try: Lovecraft, Толстой, Necronomicon,
             Война и Мир and other )
           </p>

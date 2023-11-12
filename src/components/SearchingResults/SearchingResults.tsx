@@ -42,6 +42,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
               to={`details/${item.id}?page=${props.currentPage}`}
               key={item.id}
               onClick={() => setDetails(true)}
+              data-testid="book-item"
             >
               <SearchingResultsItem key={item.id} item={item} />
             </NavLink>
