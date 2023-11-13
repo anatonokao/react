@@ -14,7 +14,6 @@ export interface SearchingResultsProps {
 }
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
-  console.log('main');
   const { response } = useContext(AppContext);
   const items: Item[] = response.items;
   const [details, setDetails] = useState(false);
@@ -41,7 +40,9 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
             <NavLink
               to={`details/${item.id}?page=${props.currentPage}`}
               key={item.id}
-              onClick={() => setDetails(true)}
+              onClick={() => {
+                setDetails(true);
+              }}
               data-testid="book-item"
             >
               <SearchingResultsItem key={item.id} item={item} />

@@ -18,7 +18,6 @@ interface DetailsState {
 
 const Details: FC = () => {
   const context: DetailsRouteContext = useOutletContext();
-  console.log(`/react/react-routing/?page=${context.currentPage}`);
   const { id } = useParams();
   const [state, setState] = useState<DetailsState>({
     isLoad: false,
@@ -54,7 +53,7 @@ const Details: FC = () => {
       getBook<Item>(id).then((res) => {
         setState(() => ({
           book: res,
-          isLoad: true,
+          isLoad: false,
         }));
       });
     }

@@ -7,3 +7,9 @@ afterEach(() => {
   vi.clearAllMocks();
   vi.resetAllMocks();
 });
+
+beforeEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+  vi.resetAllMocks();
+});

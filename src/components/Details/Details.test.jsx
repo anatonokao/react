@@ -37,7 +37,6 @@ describe('Details component', () => {
         <Details />
       </MemoryRouter>
     );
-    //
     const title = screen.getByText(book.volumeInfo.title);
     const description = screen.getByText(book.volumeInfo.description);
     const img = screen.getByTestId('img');

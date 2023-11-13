@@ -97,7 +97,7 @@ const App: FC = () => {
     );
   } else {
     return (
-      <div className="wrapper">
+      <div className="wrapper" data-testid={'app'}>
         <Header searchHandler={searchHandler} throwError={throwError} />
         {response.totalItems ? (
           <div className="content">
