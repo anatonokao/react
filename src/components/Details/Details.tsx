@@ -11,49 +11,66 @@ interface DetailsRouteContext {
   currentPage: number;
 }
 
+interface DetailsState {
+  isLoad: boolean;
+  book: Item;
+}
+
 const Details: FC = () => {
   const context: DetailsRouteContext = useOutletContext();
+  console.log(`/react/react-routing/?page=${context.currentPage}`);
   const { id } = useParams();
-  const [isLoad, setIsLoad] = useState(false);
-  const [book, setBook] = useState<Item>({
-    etag: '',
-    id: '',
-    kind: '',
-    saleInfo: { buyLink: '', listPrice: { amount: 0, currencyCode: '' } },
-    searchInfo: { textSnippet: '' },
-    selfLink: '',
-    volumeInfo: {
-      title: '',
-      subtitle: '',
-      authors: [],
-      publisher: '',
-      publishedDate: '',
-      description: '',
-      pageCount: 0,
-      imageLinks: {
-        smallThumbnail: '',
-        thumbnail: '',
+  const [state, setState] = useState<DetailsState>({
+    isLoad: false,
+    book: {
+      etag: '',
+      id: '',
+      kind: '',
+      saleInfo: { buyLink: '', listPrice: { amount: 0, currencyCode: '' } },
+      selfLink: '',
+      volumeInfo: {
+        title: '',
+        subtitle: '',
+        authors: [],
+        publisher: '',
+        publishedDate: '',
+        description: '',
+        pageCount: 0,
+        imageLinks: {
+          smallThumbnail: '',
+          thumbnail: '',
+        },
+        language: '',
       },
-      language: '',
     },
   });
 
   useEffect(() => {
     if (id) {
-      setIsLoad(true);
+      setState((prevState) => ({
+        ...prevState,
+        isLoad: true,
+      }));
       getBook<Item>(id).then((res) => {
-        setBook(res);
-        setIsLoad(false);
+        setState(() => ({
+          book: res,
+          isLoad: true,
+        }));
       });
     }
   }, [id]);
 
-  return isLoad ? (
+  return state.isLoad ? (
     <div className={styles.loading}>
-      <img className={styles.loading} src={Loading} alt="loading" />
+      <img
+        data-testid={'loading'}
+        className={styles.loading}
+        src={Loading}
+        alt="loading"
+      />
     </div>
   ) : (
-    <div className={styles.details}>
+    <div className={styles.details} data-testid={'details'}>
       <NavLink to={`/react/react-routing/?page=${context.currentPage}`}>
         <button
           type="button"
@@ -63,30 +80,34 @@ const Details: FC = () => {
           <img src="/src/assets/close-btn.svg" alt="close" />
         </button>
       </NavLink>
-      <div className={styles.title}>{book.volumeInfo.title}</div>
+      <div data-testid={'title'} className={styles.title}>
+        {state.book.volumeInfo.title}
+      </div>
       <img
+        data-testid={'img'}
         src={
-          book.volumeInfo.imageLinks
-            ? book.volumeInfo.imageLinks.thumbnail
+          state.book.volumeInfo.imageLinks
+            ? state.book.volumeInfo.imageLinks.thumbnail
             : '/src/assets/no-image.png'
         }
         className={styles.thumbnail}
         alt="Thumbnail"
       />
-      <div className={styles.description}>
-        {parse(book.volumeInfo.description || 'No description')}
+      <div data-testid={'description'} className={styles.description}>
+        {parse(state.book.volumeInfo.description || 'No description')}
       </div>
-      {book.saleInfo.listPrice ? (
+      {state.book.saleInfo.listPrice ? (
         <div className={styles.price}>
           <span className={styles.currency}>
-            {book.saleInfo.listPrice.currencyCode}
+            {state.book.saleInfo.listPrice.currencyCode}
           </span>{' '}
-          {book.saleInfo.listPrice.amount}
+          {state.book.saleInfo.listPrice.amount}
         </div>
       ) : null}
-      {book.saleInfo.buyLink ? (
+      {state.book.saleInfo.buyLink ? (
         <a
-          href={book.saleInfo.buyLink}
+          data-testid={'buyLink'}
+          href={state.book.saleInfo.buyLink}
           className={styles.buyLink}
           target="_blank"
           rel="noreferrer"
