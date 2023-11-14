@@ -70,7 +70,10 @@ const Details: FC = () => {
     </div>
   ) : (
     <div className={styles.details} data-testid={'details'}>
-      <NavLink to={`/react/react-routing/?page=${context.currentPage}`}>
+      <NavLink
+        to={`/react/react-routing/?page=${context.currentPage}`}
+        data-testid="close-details-btn"
+      >
         <button
           type="button"
           className={styles.closeBtn}

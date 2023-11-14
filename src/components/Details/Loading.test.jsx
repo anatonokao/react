@@ -20,8 +20,8 @@ vi.mock('react', async () => ({
   ],
 }));
 
-describe('Loaded work', () => {
-  it('Loading work', async () => {
+describe('Details Loading', () => {
+  it('Details Loading indicator is displayed while fetching data', async () => {
     render(
       <MemoryRouter>
         <Details />

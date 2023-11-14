@@ -26,5 +26,6 @@ export default defineConfig({
       'src/contexts/**',
       'src/components/ErrorsHandle/**',
     ],
+    reporters: 'verbose',
   },
 });

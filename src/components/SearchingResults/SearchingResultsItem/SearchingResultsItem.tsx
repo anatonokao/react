@@ -8,7 +8,7 @@ interface SearchingResultsItemProps {
 
 const SearchingResultsItem: FC<SearchingResultsItemProps> = (props) => {
   return (
-    <div className={styles.item}>
+    <div className={styles.item} data-testid={'SearchingResultsItem'}>
       <div className={styles.name}>{props.item.volumeInfo.title}</div>
       <img
         src={

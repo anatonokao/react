@@ -4,6 +4,11 @@ import { describe, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { AppContext } from './contexts/AppContext/AppContextProvider';
 
+vi.mock('react', async () => ({
+  ...(await vi.importActual('react')),
+  useEffect: vi.fn(),
+}));
+
 describe('Main component', () => {
   it('Nothing found is displayed if no cards are present', async () => {
     const value = {
@@ -17,7 +22,7 @@ describe('Main component', () => {
       setResponse: vi.fn(),
     };
 
-    await render(
+    render(
       <MemoryRouter>
         <AppContext.Provider value={value}>
           <App />

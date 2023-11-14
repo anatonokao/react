@@ -1,29 +1,17 @@
-// @vitest-environment jsdom
-// import userEvent from '@testing-library/user-event';
-import { screen, render, fireEvent } from '@testing-library/react';
-import React from 'react';
-import SearchingResults from './SearchingResults';
-import { AppContext } from '../../contexts/AppContext/AppContextProvider';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { AppContext } from '../../../contexts/AppContext/AppContextProvider';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-
-import { vi } from 'vitest';
-import Details from '../Details/Details';
+import React, { useState } from 'react';
+import App from '../../../App';
 import { userEvent } from '@testing-library/user-event';
-import { book } from '../../../tests/mockData';
 
-vi.mock('react-router-dom', async () => ({
-  ...(await vi.importActual('react-router-dom')),
-  useOutletContext: () => ({ currentPage: 1, setDetails: vi.fn() }),
-}));
-
-const setRequest = vi.fn();
-const setResponse = vi.fn();
 const value = {
   request: '',
-  setRequest: setRequest,
+  setRequest: vi.fn(),
   response: {
     kind: 'books#volumes',
-    totalItems: 3096,
+    totalItems: 456,
     items: [
       {
         kind: 'books#volume',
@@ -77,9 +65,11 @@ const value = {
             'https://books.google.com/books/about/Easy_Russian_Phrase_Book.html?hl=&id=BcX1HqbSAm4C',
         },
         saleInfo: {
-          country: 'RU',
-          saleability: 'NOT_FOR_SALE',
-          isEbook: false,
+          listPrice: {
+            amount: 33456,
+            currencyCode: 'RUB',
+          },
+          buyLink: 'google.com',
         },
         accessInfo: {
           country: 'RU',
@@ -107,51 +97,65 @@ const value = {
       },
       {
         kind: 'books#volume',
-        id: 'Db4DAAAAMBAJ',
-        etag: '6vM/HICdJGQ',
-        selfLink: 'https://www.googleapis.com/books/v1/volumes/Db4DAAAAMBAJ',
+        id: 'TNc6zOpsCdsFJGvv',
+        etag: 'TNc6zOpsCdc',
+        selfLink: 'https://www.googleapis.com/books/v1/volumes/BcX1HqbSAm4C',
         volumeInfo: {
-          title: 'Jet',
-          publishedDate: '2003-08-11',
+          title: 'Easy Russian Phrase Book',
+          subtitle: 'Over 690 Basic Phrases for Everyday Use',
+          authors: ['Dover Publications, Inc'],
+          publisher: 'Courier Corporation',
+          publishedDate: '1995-01-01',
           description:
-            'The weekly source of African American political and entertainment news.',
+            'Handy volume of nearly 700 basic phrases fosters instant communication on everyday subjects as well as travel-related topics, including terms involving restaurants, reservations, and more. Includes phonetic pronunciation guide and index.',
+          industryIdentifiers: [
+            {
+              type: 'ISBN_10',
+              identifier: '048628669X',
+            },
+            {
+              type: 'ISBN_13',
+              identifier: '9780486286693',
+            },
+          ],
           readingModes: {
             text: false,
             image: true,
           },
-          pageCount: 64,
-          printType: 'MAGAZINE',
-          averageRating: 4,
-          ratingsCount: 1,
+          pageCount: 80,
+          printType: 'BOOK',
+          categories: ['Foreign Language Study'],
           maturityRating: 'NOT_MATURE',
-          allowAnonLogging: false,
-          contentVersion: '0.0.2.0.preview.1',
+          allowAnonLogging: true,
+          contentVersion: '1.3.3.0.preview.1',
           panelizationSummary: {
             containsEpubBubbles: false,
             containsImageBubbles: false,
           },
           imageLinks: {
             smallThumbnail:
-              'http://books.google.com/books/content?id=Db4DAAAAMBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api',
+              'http://books.google.com/books/content?id=BcX1HqbSAm4C&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api',
             thumbnail:
-              'http://books.google.com/books/content?id=Db4DAAAAMBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
+              'http://books.google.com/books/content?id=BcX1HqbSAm4C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
           },
-          language: 'en',
+          language: 'ru',
           previewLink:
-            'http://books.google.ru/books?id=Db4DAAAAMBAJ&printsec=frontcover&dq=book&hl=&cd=4&source=gbs_api',
+            'http://books.google.ru/books?id=BcX1HqbSAm4C&pg=PP2&dq=book&hl=&cd=3&source=gbs_api',
           infoLink:
-            'http://books.google.ru/books?id=Db4DAAAAMBAJ&dq=book&hl=&source=gbs_api',
+            'http://books.google.ru/books?id=BcX1HqbSAm4C&dq=book&hl=&source=gbs_api',
           canonicalVolumeLink:
-            'https://books.google.com/books/about/Jet.html?hl=&id=Db4DAAAAMBAJ',
+            'https://books.google.com/books/about/Easy_Russian_Phrase_Book.html?hl=&id=BcX1HqbSAm4C',
         },
         saleInfo: {
-          country: 'RU',
-          saleability: 'NOT_FOR_SALE',
-          isEbook: false,
+          listPrice: {
+            amount: 33456,
+            currencyCode: 'RUB',
+          },
+          buyLink: 'google.com',
         },
         accessInfo: {
           country: 'RU',
-          viewability: 'ALL_PAGES',
+          viewability: 'PARTIAL',
           embeddable: true,
           publicDomain: false,
           textToSpeechPermission: 'ALLOWED',
@@ -159,106 +163,74 @@ const value = {
             isAvailable: false,
           },
           pdf: {
-            isAvailable: false,
+            isAvailable: true,
+            acsTokenLink:
+              'http://books.google.ru/books/download/Easy_Russian_Phrase_Book-sample-pdf.acsm?id=BcX1HqbSAm4C&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api',
           },
           webReaderLink:
-            'http://play.google.com/books/reader?id=Db4DAAAAMBAJ&hl=&source=gbs_api',
+            'http://play.google.com/books/reader?id=BcX1HqbSAm4C&hl=&source=gbs_api',
           accessViewStatus: 'SAMPLE',
           quoteSharingAllowed: false,
         },
         searchInfo: {
           textSnippet:
-            'The weekly source of African American political and entertainment news.',
+            '... <b>BOOK</b> , Stanley Appelbaum ( ed . ) ( 26711-3 ) $ 3.95 INTERNATIONAL AIRLINE PHRASE <b>BOOK</b> IN SIX LANGUAGES , Joseph W. Bator . ( 22017-6 ) $ 5.95 EGYPTIAN LANGUAGE : EASY LESSONS IN EGYPTIAN HIEROGLYPHICS , Sir E.A. Wallis Budge . ( Except&nbsp;...',
         },
       },
     ],
   },
-  setResponse: setResponse,
+  setResponse: vi.fn(),
 };
 
-describe('Searching results test', () => {
-  it('SearchingResults component rendered', () => {
-    render(
-      <MemoryRouter>
-        <SearchingResults />
-      </MemoryRouter>
+let mockParams = { page: '1' };
+vi.mock('react-router-dom', async () => ({
+  ...((await vi.importActual('react-router-dom')) as object),
+  useSearchParams: () => {
+    const [params, setParams] = useState(
+      new URLSearchParams('page=' + mockParams.page)
     );
-  });
+    return [
+      params,
+      (newParams: { page: string }) => {
+        console.log(newParams);
+        mockParams = newParams;
+        setParams(new URLSearchParams('page=' + newParams.page));
+      },
+    ];
+  },
+}));
 
-  it('Component renders the specified number of cards', async () => {
-    await render(
-      <MemoryRouter>
-        <AppContext.Provider value={value}>
-          <SearchingResults />
-        </AppContext.Provider>
-      </MemoryRouter>
-    );
-    expect((await screen.findAllByTestId('book-item')).length).toBe(2);
-  });
-
-  it('Click on a card opens a detailed card component', () => {
-    render(
-      <MemoryRouter>
-        <AppContext.Provider value={value}>
-          <SearchingResults currentPage={1} />
-        </AppContext.Provider>
-      </MemoryRouter>
-    );
-    const card = screen.getAllByTestId('book-item')[0];
-    fireEvent.click(card);
-    expect(card).toHaveAttribute('class', 'active');
-  });
-});
-
-describe('Details click test', () => {
-  it('Click on a card triggers an additional API call to fetch detailed information', async () => {
-    const spy = vi.spyOn(global, 'fetch');
-    render(
-      <MemoryRouter initialEntries={['/react/react-routing/']}>
-        <AppContext.Provider value={value}>
-          <Routes>
-            <Route
-              path="/react/react-routing/"
-              element={<SearchingResults currentPage={1} />}
-            />
-            <Route
-              path="/react/react-routing/details/:id"
-              element={<Details currentPage={1} />}
-            />
-          </Routes>
-        </AppContext.Provider>
-      </MemoryRouter>
-    );
-    await userEvent.click(screen.getAllByTestId('book-item')[0]);
-    await expect(spy).toHaveBeenCalledTimes(1);
-  });
-
-  it('Click on the close button hides the details component', async () => {
-    const mockFetch = Promise.resolve({ json: () => Promise.resolve(book) });
+describe('Pagination', () => {
+  it('Pagination component updates URL query parameter when page changes', async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve(value.response),
+    });
     global.fetch = vi.fn().mockImplementation(() => mockFetch);
 
     render(
       <MemoryRouter initialEntries={['/react/react-routing/']}>
         <AppContext.Provider value={value}>
           <Routes>
-            <Route
-              path="/react/react-routing/"
-              element={<SearchingResults currentPage={1} />}
-            />
-            <Route
-              path="/react/react-routing/details/:id"
-              element={<Details currentPage={1} />}
-            />
+            <Route path="/react/react-routing/" element={<App />} />
           </Routes>
         </AppContext.Provider>
       </MemoryRouter>
     );
-    await userEvent.click(screen.getAllByTestId('book-item')[0]);
 
-    const closeBtn = await screen.findByTestId('close-details-btn');
+    let PaginationNext = await screen.findByTestId('PaginationNext');
+    await userEvent.click(PaginationNext);
+    expect(mockParams).toEqual({ page: '2' });
 
-    await userEvent.click(closeBtn);
+    PaginationNext = await screen.findByTestId('PaginationNext');
+    await userEvent.click(PaginationNext);
+    expect(mockParams).toEqual({ page: '3' });
 
-    await expect(closeBtn).not.toBeInTheDocument();
+    let PaginationPrev = await screen.findByTestId('PaginationPrev');
+    await userEvent.click(PaginationPrev);
+    expect(mockParams).toEqual({ page: '2' });
+
+    PaginationPrev = await screen.findByTestId('PaginationPrev');
+    await userEvent.click(PaginationPrev);
+    expect(mockParams).toEqual({ page: '1' });
   });
 });

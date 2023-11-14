@@ -12,6 +12,7 @@ const Pagination: FC<PaginationProps> = (props) => {
   return (
     <div className={styles.pagination}>
       <button
+        data-testid={'PaginationPrev'}
         type="button"
         onClick={() => props.updatePage('prev')}
         className={styles.btn}
@@ -20,6 +21,7 @@ const Pagination: FC<PaginationProps> = (props) => {
       </button>
       <span className={styles.page_number}>{props.currentPage}</span>
       <button
+        data-testid={'PaginationNext'}
         type="button"
         onClick={() => props.updatePage('next')}
         className={styles.btn}
