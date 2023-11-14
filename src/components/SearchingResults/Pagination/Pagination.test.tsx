@@ -192,7 +192,6 @@ vi.mock('react-router-dom', async () => ({
     return [
       params,
       (newParams: { page: string }) => {
-        console.log(newParams);
         mockParams = newParams;
         setParams(new URLSearchParams('page=' + newParams.page));
       },
@@ -208,10 +207,10 @@ describe('Pagination', () => {
     global.fetch = vi.fn().mockImplementation(() => mockFetch);
 
     render(
-      <MemoryRouter initialEntries={['/react/react-routing/']}>
+      <MemoryRouter initialEntries={['/']}>
         <AppContext.Provider value={value}>
           <Routes>
-            <Route path="/react/react-routing/" element={<App />} />
+            <Route path="/" element={<App />} />
           </Routes>
         </AppContext.Provider>
       </MemoryRouter>

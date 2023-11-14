@@ -12,7 +12,7 @@ interface AppContextProviderProps {
   children: ReactNode;
 }
 
-interface IContext {
+export interface IContext {
   request: string;
   setRequest: Dispatch<SetStateAction<string>>;
   response: HttpResponse;

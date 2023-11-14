@@ -74,7 +74,6 @@ const App: FC = () => {
   };
 
   const updatePage = (vector: 'next' | 'prev') => {
-    console.log(response);
     if (vector === 'next' && response.totalItems > page * countPerPage) {
       setPage((prevPage) => prevPage + 1);
     } else if (vector === 'prev' && page * countPerPage > countPerPage) {

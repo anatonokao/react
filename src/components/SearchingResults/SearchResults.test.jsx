@@ -214,17 +214,11 @@ describe('Details click test', () => {
   it('Click on a card triggers an additional API call to fetch detailed information', async () => {
     const spy = vi.spyOn(global, 'fetch');
     render(
-      <MemoryRouter initialEntries={['/react/react-routing/']}>
+      <MemoryRouter initialEntries={['/']}>
         <AppContext.Provider value={value}>
           <Routes>
-            <Route
-              path="/react/react-routing/"
-              element={<SearchingResults currentPage={1} />}
-            />
-            <Route
-              path="/react/react-routing/details/:id"
-              element={<Details currentPage={1} />}
-            />
+            <Route path="/" element={<SearchingResults currentPage={1} />} />
+            <Route path="/details/:id" element={<Details currentPage={1} />} />
           </Routes>
         </AppContext.Provider>
       </MemoryRouter>
@@ -238,17 +232,11 @@ describe('Details click test', () => {
     global.fetch = vi.fn().mockImplementation(() => mockFetch);
 
     render(
-      <MemoryRouter initialEntries={['/react/react-routing/']}>
+      <MemoryRouter initialEntries={['/']}>
         <AppContext.Provider value={value}>
           <Routes>
-            <Route
-              path="/react/react-routing/"
-              element={<SearchingResults currentPage={1} />}
-            />
-            <Route
-              path="/react/react-routing/details/:id"
-              element={<Details currentPage={1} />}
-            />
+            <Route path="/" element={<SearchingResults currentPage={1} />} />
+            <Route path="/details/:id" element={<Details currentPage={1} />} />
           </Routes>
         </AppContext.Provider>
       </MemoryRouter>

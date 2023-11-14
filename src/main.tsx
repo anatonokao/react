@@ -15,7 +15,7 @@ import { AppContextProvider } from './contexts/AppContext/AppContextProvider';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      path="/react/react-routing/"
+      path="/"
       element={
         <ErrorBoundary>
           <AppContextProvider>
