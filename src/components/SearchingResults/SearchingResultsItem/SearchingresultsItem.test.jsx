@@ -7,7 +7,6 @@ describe('Main component', () => {
 
   it('check render', () => {
     render(<SearchingResultsItem item={item} />);
-    screen.debug();
     expect(screen.getByTestId('SearchingResultsItem')).toBeInTheDocument();
   });
 
