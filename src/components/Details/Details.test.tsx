@@ -27,6 +27,46 @@ vi.mock('react-router-dom', async () => ({
 }));
 
 describe('Details click test', () => {
+  it('Detailed card component correctly displays the detailed card data', async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve(response),
+    });
+    global.fetch = vi.fn().mockImplementationOnce(() => mockFetch);
+
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <AppContextProvider>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/details/:id" element={<Details />} />
+          </Routes>
+        </AppContextProvider>
+      </MemoryRouter>
+    );
+    const card = (await screen.findAllByTestId('book-item'))[0];
+
+    const mockFetchBook = Promise.resolve({
+      json: () => Promise.resolve(book),
+    });
+    global.fetch = vi.fn().mockImplementationOnce(() => mockFetchBook);
+
+    await userEvent.click(card);
+    const details = await screen.findByTestId('details');
+
+    const detailsImg = await screen.findByTestId('img');
+
+    expect(detailsImg).toHaveAttribute(
+      'src',
+      book.volumeInfo.imageLinks.thumbnail
+    );
+    expect(details).toHaveTextContent(book.volumeInfo.title);
+    expect(details).toHaveTextContent(book.volumeInfo.authors[0]);
+    expect(details).toHaveTextContent(book.saleInfo.listPrice.amount + '');
+    expect(details).toHaveTextContent(book.saleInfo.listPrice.currencyCode);
+  });
+});
+
+describe('Details click test', () => {
   it('Click on a card opens a detailed card component', async () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve(response),
@@ -43,7 +83,7 @@ describe('Details click test', () => {
         </AppContextProvider>
       </MemoryRouter>
     );
-    const card = await (await screen.findAllByTestId('book-item'))[0];
+    const card = (await screen.findAllByTestId('book-item'))[0];
 
     const mockFetchBook = Promise.resolve({
       json: () => Promise.resolve(book),
