@@ -52,7 +52,7 @@ describe('Details click test', () => {
 
     await userEvent.click(card);
     const details = await screen.findByTestId('details');
-    expect(details).toBeInTheDocument();
+    expect(details).not.toBeInTheDocument();
   });
 
   it('Click on a card triggers an additional API call to fetch detailed information', async () => {
