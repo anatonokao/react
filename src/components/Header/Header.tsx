@@ -13,6 +13,7 @@ const Header: FC<HeaderProps> = (props) => {
       <div className={styles.logoAndBtn}>
         <h1 className={styles.title}>Books Store</h1>
         <button
+          data-testid="ErrorBtn"
           className={styles.throwErrorBtn}
           onClick={() => {
             props.throwError();

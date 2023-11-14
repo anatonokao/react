@@ -1,16 +1,16 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import Details from './Details';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { book } from '../../../tests/mockData';
 
 vi.mock('react-router-dom', async () => ({
-  ...(await vi.importActual('react-router-dom')),
+  ...((await vi.importActual('react-router-dom')) as object),
   useOutletContext: () => ({ currentPage: 1, setDetails: vi.fn() }),
 }));
 vi.mock('react', async () => ({
-  ...(await vi.importActual('react')),
+  ...((await vi.importActual('react')) as object),
   useState: () => [
     {
       isLoad: true,
