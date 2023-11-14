@@ -11,20 +11,24 @@ import {
 } from 'react-router-dom';
 import Details from './components/Details/Details';
 import { AppContextProvider } from './contexts/AppContext/AppContextProvider';
+import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path="/"
-      element={
-        <ErrorBoundary>
-          <AppContextProvider>
-            <App />
-          </AppContextProvider>
-        </ErrorBoundary>
-      }
-    >
-      <Route path="details/:id" element={<Details />} />
+    <Route path="/">
+      <Route
+        path="/"
+        element={
+          <ErrorBoundary>
+            <AppContextProvider>
+              <App />
+            </AppContextProvider>
+          </ErrorBoundary>
+        }
+      >
+        <Route path="details/:id" element={<Details />} />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
 );
