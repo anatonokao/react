@@ -12,6 +12,10 @@ import {
 import Details from './components/Details/Details';
 import { AppContextProvider } from './contexts/AppContext/AppContextProvider';
 import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
+import { Provider } from 'react-redux';
+import { setupStore } from './store/store';
+
+const store = setupStore();
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,7 +25,9 @@ const router = createBrowserRouter(
         element={
           <ErrorBoundary>
             <AppContextProvider>
-              <App />
+              <Provider store={store}>
+                <App />
+              </Provider>
             </AppContextProvider>
           </ErrorBoundary>
         }
