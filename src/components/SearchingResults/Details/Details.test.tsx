@@ -3,9 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 import Details from './Details';
 import React, { useState } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { book, response } from '../../../tests/mockData';
+import { book, response } from '../../../../tests/mockData';
 import { AppContextProvider } from '../../contexts/AppContext/AppContextProvider';
-import App from '../../App';
+import App from '../../../App';
 import { userEvent } from '@testing-library/user-event';
 
 let mockParams = { page: '1' };

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import Details from './Details';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { book } from '../../../tests/mockData';
+import { book } from '../../../../tests/mockData';
 
 vi.mock('react-router-dom', async () => ({
   ...((await vi.importActual('react-router-dom')) as object),

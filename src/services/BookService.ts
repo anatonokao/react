@@ -1,8 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { HttpResponse } from '../App';
-import { IBook } from '../models/IBook';
+import { IBook as Item, IBook } from '../models/IBook';
 
 const API_KEY: string = 'AIzaSyDYIbMfKgnY0ApGq1a3hM2Z3-g1GlqYa7o';
+
+export interface HttpResponse {
+  kind: string;
+  totalItems: number;
+  items: Item[];
+}
 
 type SearchParams = {
   query?: string;

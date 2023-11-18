@@ -1,74 +1,44 @@
 import './App.css';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Header from './components/Header/Header';
 import SearchingResults from './components/SearchingResults/SearchingResults';
-import { IBook as Item } from './models/IBook';
 import Loading from './assets/Loading.gif';
-import { searchBooks } from './API/API';
 import { useSearchParams } from 'react-router-dom';
-// import { AppContext } from './contexts/AppContext/AppContextProvider';
 import { bookAPI } from './services/BookService';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
-import { appSlice } from './store/reducers/BookSlice';
-
-interface AppState {
-  error: boolean;
-  isLoaded: boolean;
-}
-
-export interface HttpResponse {
-  kind: string;
-  totalItems: number;
-  items: Item[];
-}
+import { appSlice } from './store/reducers/AppSlice';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { setTotalItems, setIsLoading } = appSlice.actions;
+  const { setTotalItems, setIsLoading, setPage } = appSlice.actions;
   const { request, isAppLoading, page, countPerPage } = useAppSelector(
     (state) => state.appReducer
   );
 
+  const [params, setParams] = useSearchParams();
+  const pageFromParams = Number(params.get('page'));
+
   const { data, isFetching, error } = bookAPI.useFetchBookSearchQuery({
     query: request,
-    startIndex: page * countPerPage,
+    startIndex: (page - 1) * countPerPage,
     countPerPage,
   });
 
-  data && dispatch(setTotalItems(data.totalItems));
-  dispatch(setIsLoading(isFetching));
+  useEffect(() => {
+    data && dispatch(setTotalItems(data.totalItems));
 
-  const pageFromParams = Number(useSearchParams()[0].get('page'));
+    dispatch(setIsLoading(isFetching));
 
-  // const [countPerPage, setCountPerPage] = useState(20);
-
-  const [, setParams] = useSearchParams();
+    if (pageFromParams) {
+      dispatch(setPage(pageFromParams || 1));
+    } else setParams(`page=${page}`);
+  }, [isFetching, pageFromParams]);
 
   const [errorFromBtn, setErrorFromBtn] = useState(false);
   const throwError = () => {
     setErrorFromBtn(true);
   };
-
-  // const searchHandler = (value: string) => {
-  //   setState((prevState) => ({
-  //     ...prevState,
-  //     searchValue: value.trim(),
-  //   }));
-  // };
-  //
-  // const updatePage = (vector: 'next' | 'prev') => {
-  //   if (vector === 'next' && response.totalItems > page * countPerPage) {
-  //     setPage((prevPage) => prevPage + 1);
-  //   } else if (vector === 'prev' && page * countPerPage > countPerPage) {
-  //     setPage((prevPage) => prevPage - 1);
-  //   }
-  // };
-  //
-  // const updateCountPerPage = (count: number): void => {
-  //   setPage(1);
-  //   setCountPerPage(count);
-  // };
 
   if (errorFromBtn || error) throw new Error("I'm crashed!");
   else if (isAppLoading) {

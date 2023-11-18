@@ -1,21 +1,17 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './Details.module.css';
 import Loading from '/src/assets/Loading.gif';
 import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
-import { bookAPI } from '../../services/BookService';
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { appSlice } from '../../store/reducers/BookSlice';
+import { bookAPI } from '../../../services/BookService';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { appSlice } from '../../../store/reducers/AppSlice';
+import closeBtn from '../../../assets/close-btn.svg';
 
 interface DetailsRouteContext {
   setDetails: (value: boolean) => void;
   currentPage: number;
 }
-
-// interface DetailsState {
-//   isLoad: boolean;
-//   book: Item;
-// }
 
 const Details: FC = () => {
   const context: DetailsRouteContext = useOutletContext();
@@ -24,24 +20,12 @@ const Details: FC = () => {
 
   const dispatch = useAppDispatch();
   const { setIsDetailsLoading } = appSlice.actions;
-  const { data, isLoading } = bookAPI.useFetchBookDetailsQuery(id || '');
-  dispatch(setIsDetailsLoading(isLoading));
+  const { data, isFetching } = bookAPI.useFetchBookDetailsQuery(id || '');
   const { isDetailsLoading } = useAppSelector((state) => state.appReducer);
 
-  // useEffect(() => {
-  //   if (id) {
-  //     setState((prevState) => ({
-  //       ...prevState,
-  //       isLoad: true,
-  //     }));
-  //     getBook<Item>(id).then((res) => {
-  //       setState(() => ({
-  //         book: res,
-  //         isLoad: false,
-  //       }));
-  //     });
-  //   }
-  // }, [id]);
+  useEffect(() => {
+    dispatch(setIsDetailsLoading(isFetching));
+  }, [isFetching]);
 
   return isDetailsLoading ? (
     <div className={styles.loading}>
@@ -63,7 +47,7 @@ const Details: FC = () => {
           className={styles.closeBtn}
           onClick={() => context.setDetails(false)}
         >
-          <img src="/src/assets/close-btn.svg" alt="close" />
+          <img src={closeBtn} alt="close" />
         </button>
       </NavLink>
       <div data-testid={'title'} className={styles.title}>

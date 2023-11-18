@@ -3,15 +3,10 @@ import SearchingResultsItem from './SearchingResultsItem/SearchingResultsItem';
 import styles from './SearchingResults.module.css';
 import Pagination from './Pagination/Pagination';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { bookAPI } from '../../services/BookService';
 import { IBook } from '../../models/IBook';
 import { useAppSelector } from '../../hooks/redux';
 
 export interface SearchingResultsProps {
-  // updatePage: (vector: 'next' | 'prev') => void;
-  // // currentPage: number;
-  // // countPerPage: number;
-  // updateCountPerPage: (count: number) => void;
   data: IBook[];
 }
 

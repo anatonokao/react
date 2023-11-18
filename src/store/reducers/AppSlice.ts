@@ -37,17 +37,12 @@ export const appSlice = createSlice({
     setTotalItems: (state, action: PayloadAction<number>) => {
       state.totalItems = action.payload;
     },
-    setPage: (state, action: PayloadAction<'prev' | 'next'>) => {
+    setPage: (state, action: PayloadAction<number>) => {
       if (
-        action.payload === 'next' &&
-        state.totalItems > state.page * state.countPerPage
+        action.payload * state.countPerPage >= state.countPerPage &&
+        state.totalItems > action.payload * state.countPerPage
       )
-        state.page += 1;
-      if (
-        action.payload === 'prev' &&
-        state.page * state.countPerPage > state.countPerPage
-      )
-        state.page -= 1;
+        state.page = action.payload;
     },
     setStartIndex: (state, action: PayloadAction<number>) => {
       state.startIndex = action.payload;
@@ -56,34 +51,6 @@ export const appSlice = createSlice({
       state.countPerPage = action.payload;
     },
   },
-  // extraReducers: {
-  //   [fetchBooks.pending.type]: (state) => (state.isLoading = true),
-  //   [fetchBooks.fulfilled.type]: (state, action: PayloadAction<IBook[]>) => {
-  //     state.isLoading = false;
-  //     state.error = '';
-  //     state.books = action.payload;
-  //   },
-  //   [fetchBooks.rejected.type]: (state, action: PayloadAction<string>) => {
-  //     state.isLoading = false;
-  //     state.error = action.payload;
-  //   },
-  // },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(bookAPI., (state) => {
-  //       state.isLoading = true;
-  //     })
-  //     .addCase(fetchBooks.fulfilled, (state, action) => {
-  //       state.isLoading = false;
-  //       state.error = '';
-  //       state.books = action.payload.items;
-  //     })
-  //     .addCase(fetchBooks.rejected, (state, action) => {
-  //       state.isLoading = false;
-  //       state.error =
-  //         typeof action.payload === 'string' ? action.payload : 'Error 404';
-  //     });
-  // },
 });
 
 export default appSlice.reducer;
