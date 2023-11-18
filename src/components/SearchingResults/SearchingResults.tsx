@@ -4,27 +4,25 @@ import styles from './SearchingResults.module.css';
 import Pagination from './Pagination/Pagination';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { bookAPI } from '../../services/BookService';
+import { IBook } from '../../models/IBook';
+import { useAppSelector } from '../../hooks/redux';
 
 export interface SearchingResultsProps {
   updatePage: (vector: 'next' | 'prev') => void;
-  currentPage: number;
-  countPerPage: number;
+  // currentPage: number;
+  // countPerPage: number;
   updateCountPerPage: (count: number) => void;
+  data: IBook[];
 }
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
-  const { data } = bookAPI.useFetchBookSearchQuery({});
+  // const { data } = bookAPI.useFetchBookSearchQuery({});
 
   const [details, setDetails] = useState(false);
   const navigate = useNavigate();
   return (
     <>
-      <Pagination
-        updatePage={props.updatePage}
-        currentPage={props.currentPage}
-        countPerPage={props.countPerPage}
-        updateCountPerPage={props.updateCountPerPage}
-      />
+      <Pagination />
       <div className={styles.body}>
         <div
           className={styles.itemsContainer}
@@ -35,8 +33,8 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
             }
           }}
         >
-          {data &&
-            data.items.map((item) => (
+          {props.data &&
+            props.data.map((item) => (
               <NavLink
                 to={`details/${item.id}?page=${props.currentPage}`}
                 key={item.id}

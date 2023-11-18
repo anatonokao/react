@@ -1,29 +1,30 @@
 import React, { FC } from 'react';
 import styles from './Pagination.module.css';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { appSlice } from '../../../store/reducers/BookSlice';
 
-interface PaginationProps {
-  updatePage: (vector: 'next' | 'prev') => void;
-  currentPage: number;
-  countPerPage: number;
-  updateCountPerPage: (count: number) => void;
-}
+const Pagination: FC = () => {
+  const { page, countPerPage } = useAppSelector((state) => state.appReducer);
 
-const Pagination: FC<PaginationProps> = (props) => {
+  const { setPage, setCountPerPage } = appSlice.actions;
+
+  const dispatch = useAppDispatch();
+
   return (
     <div className={styles.pagination}>
       <button
         data-testid={'PaginationPrev'}
         type="button"
-        onClick={() => props.updatePage('prev')}
+        onClick={() => dispatch(setPage('prev'))}
         className={styles.btn}
       >
         {'🡄'}
       </button>
-      <span className={styles.page_number}>{props.currentPage}</span>
+      <span className={styles.page_number}>{page}</span>
       <button
         data-testid={'PaginationNext'}
         type="button"
-        onClick={() => props.updatePage('next')}
+        onClick={() => dispatch(setPage('next'))}
         className={styles.btn}
       >
         {'🡆'}
@@ -32,8 +33,8 @@ const Pagination: FC<PaginationProps> = (props) => {
         className={styles.countSelector}
         name="maxCount"
         id="maxCount"
-        onChange={(e) => props.updateCountPerPage(Number(e.target.value))}
-        value={props.countPerPage}
+        onChange={(e) => dispatch(setCountPerPage(Number(e.target.value)))}
+        value={countPerPage}
       >
         <option value="10">10</option>
         <option value="20">20</option>

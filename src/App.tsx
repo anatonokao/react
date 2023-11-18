@@ -8,7 +8,8 @@ import { searchBooks } from './API/API';
 import { useSearchParams } from 'react-router-dom';
 // import { AppContext } from './contexts/AppContext/AppContextProvider';
 import { bookAPI } from './services/BookService';
-import { useAppSelector } from './hooks/redux';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
+import { appSlice } from './store/reducers/BookSlice';
 
 interface AppState {
   error: boolean;
@@ -25,6 +26,9 @@ const App: FC = () => {
   const { request, isLoading, page } = useAppSelector(
     (state) => state.appReducer
   );
+
+  const { setTotalItems } = appSlice.actions;
+  const dispatch = useAppDispatch();
 
   const pageFromParams = Number(useSearchParams()[0].get('page'));
 
@@ -60,7 +64,8 @@ const App: FC = () => {
     //request, page, countPerPage
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { data, error } = bookAPI.useFetchBookSearchQuery({});
+  const { data, error } = bookAPI.useFetchBookSearchQuery({ query: request });
+  data && dispatch(setTotalItems(data.totalItems));
 
   const throwError = () => {
     setErrorFromBtn(true);
@@ -86,7 +91,7 @@ const App: FC = () => {
   //   setCountPerPage(count);
   // };
 
-  if (errorFromBtn) throw new Error("I'm crashed!");
+  if (errorFromBtn || error) throw new Error("I'm crashed!");
   else if (isLoading) {
     return (
       <div className="wrapper">
@@ -109,12 +114,13 @@ const App: FC = () => {
         <Header throwError={throwError} />
         {data && data.totalItems ? (
           <div className="content">
-            {/*<SearchingResults*/}
-            {/*  updatePage={updatePage}*/}
-            {/*  currentPage={page}*/}
-            {/*  countPerPage={countPerPage}*/}
-            {/*  updateCountPerPage={updateCountPerPage}*/}
-            {/*/>*/}
+            <SearchingResults
+              updatePage={(vector) => {}}
+              currentPage={page}
+              countPerPage={countPerPage}
+              updateCountPerPage={(vector) => {}}
+              data={data.items}
+            />
           </div>
         ) : (
           <p className="weCantFind" data-testid="nothing-found">

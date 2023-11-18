@@ -4,6 +4,7 @@ interface AppState {
   request: string;
   isLoading: boolean;
   isDetailsLoading: boolean;
+  totalItems: number;
   page: number;
   startIndex: number;
   countPerPage: number;
@@ -13,6 +14,7 @@ const initState: AppState = {
   request: localStorage.getItem('request') || '',
   isLoading: false,
   isDetailsLoading: false,
+  totalItems: 0,
   page: 1,
   startIndex: 0,
   countPerPage: 20,
@@ -32,8 +34,20 @@ export const appSlice = createSlice({
     setIsDetailsLoading: (state, action: PayloadAction<boolean>) => {
       state.isDetailsLoading = action.payload;
     },
-    setPage: (state, action: PayloadAction<number>) => {
-      state.page = action.payload;
+    setTotalItems: (state, action: PayloadAction<number>) => {
+      state.totalItems = action.payload;
+    },
+    setPage: (state, action: PayloadAction<'prev' | 'next'>) => {
+      if (
+        action.payload === 'next' &&
+        state.totalItems > state.page * state.countPerPage
+      )
+        state.page += 1;
+      if (
+        action.payload === 'prev' &&
+        state.page * state.countPerPage > state.countPerPage
+      )
+        state.page -= 1;
     },
     setStartIndex: (state, action: PayloadAction<number>) => {
       state.startIndex = action.payload;
