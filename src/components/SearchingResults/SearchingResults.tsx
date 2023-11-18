@@ -1,10 +1,9 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useState } from 'react';
 import SearchingResultsItem from './SearchingResultsItem/SearchingResultsItem';
-import { Item } from '../../types/Interfaces';
 import styles from './SearchingResults.module.css';
 import Pagination from './Pagination/Pagination';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { AppContext } from '../../contexts/AppContext/AppContextProvider';
+import { bookAPI } from '../../services/BookService';
 
 export interface SearchingResultsProps {
   updatePage: (vector: 'next' | 'prev') => void;
@@ -14,8 +13,8 @@ export interface SearchingResultsProps {
 }
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
-  const { response } = useContext(AppContext);
-  const items: Item[] = response.items;
+  const { data } = bookAPI.useFetchBookSearchQuery({});
+
   const [details, setDetails] = useState(false);
   const navigate = useNavigate();
   return (
@@ -36,18 +35,19 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
             }
           }}
         >
-          {items.map((item) => (
-            <NavLink
-              to={`details/${item.id}?page=${props.currentPage}`}
-              key={item.id}
-              onClick={() => {
-                setDetails(true);
-              }}
-              data-testid="book-item"
-            >
-              <SearchingResultsItem key={item.id} item={item} />
-            </NavLink>
-          ))}
+          {data &&
+            data.items.map((item) => (
+              <NavLink
+                to={`details/${item.id}?page=${props.currentPage}`}
+                key={item.id}
+                onClick={() => {
+                  setDetails(true);
+                }}
+                data-testid="book-item"
+              >
+                <SearchingResultsItem key={item.id} item={item} />
+              </NavLink>
+            ))}
         </div>
         <Outlet context={{ setDetails, currentPage: props.currentPage }} />
       </div>

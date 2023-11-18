@@ -1,13 +1,17 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import bookReducer from './reducers/BookSlice';
+import appReducer from './reducers/BookSlice';
+import { bookAPI } from '../services/BookService';
 
 const rootReducer = combineReducers({
-  bookReducer,
+  appReducer,
+  [bookAPI.reducerPath]: bookAPI.reducer,
 });
 
 export const setupStore = () => {
   return configureStore({
     reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(bookAPI.middleware),
   });
 };
 
