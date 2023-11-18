@@ -106,7 +106,7 @@ const App: FC = () => {
         {/*    data.items.map((book) => book.volumeInfo.title)}*/}
         {/*</div>*/}
 
-        {/*<Header searchHandler={searchHandler} throwError={throwError} />*/}
+        <Header throwError={throwError} />
         {data && data.totalItems ? (
           <div className="content">
             {/*<SearchingResults*/}

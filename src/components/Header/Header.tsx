@@ -3,7 +3,6 @@ import Search from './Search/Search';
 import styles from './Header.module.css';
 
 interface HeaderProps {
-  searchHandler: (value: string) => void;
   throwError: () => void;
 }
 

@@ -1,9 +1,12 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './Search.module.css';
-import { AppContext } from '../../../contexts/AppContext/AppContextProvider';
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
+import { appSlice } from '../../../store/reducers/BookSlice';
 
 const Search: FC = () => {
-  const { request, setRequest } = useContext(AppContext);
+  const { request } = useAppSelector((state) => state.appReducer);
+  const { setRequest } = appSlice.actions;
+  const dispatch = useAppDispatch();
 
   const [inputValue, setInputValue] = useState(request);
 
@@ -29,7 +32,7 @@ const Search: FC = () => {
       <button
         className={styles.searchButton}
         onClick={() => {
-          setRequest(inputRef.current?.value || '');
+          dispatch(setRequest(inputRef.current?.value || ''));
         }}
         data-testid="search-button"
       >
