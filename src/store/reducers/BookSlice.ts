@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AppState {
   request: string;
-  isLoading: boolean;
+  isAppLoading: boolean;
   isDetailsLoading: boolean;
   totalItems: number;
   page: number;
@@ -12,7 +12,7 @@ interface AppState {
 
 const initState: AppState = {
   request: localStorage.getItem('request') || '',
-  isLoading: false,
+  isAppLoading: false,
   isDetailsLoading: false,
   totalItems: 0,
   page: 1,
@@ -29,7 +29,7 @@ export const appSlice = createSlice({
       localStorage.setItem('request', action.payload);
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
+      state.isAppLoading = action.payload;
     },
     setIsDetailsLoading: (state, action: PayloadAction<boolean>) => {
       state.isDetailsLoading = action.payload;

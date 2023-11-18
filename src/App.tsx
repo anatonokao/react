@@ -23,50 +23,29 @@ export interface HttpResponse {
 }
 
 const App: FC = () => {
-  const { request, isLoading, page } = useAppSelector(
+  const dispatch = useAppDispatch();
+
+  const { setTotalItems, setIsLoading } = appSlice.actions;
+  const { request, isAppLoading, page, countPerPage } = useAppSelector(
     (state) => state.appReducer
   );
 
-  const { setTotalItems } = appSlice.actions;
-  const dispatch = useAppDispatch();
+  const { data, isFetching, error } = bookAPI.useFetchBookSearchQuery({
+    query: request,
+    startIndex: page * countPerPage,
+    countPerPage,
+  });
+
+  data && dispatch(setTotalItems(data.totalItems));
+  dispatch(setIsLoading(isFetching));
 
   const pageFromParams = Number(useSearchParams()[0].get('page'));
 
-  const [countPerPage, setCountPerPage] = useState(20);
+  // const [countPerPage, setCountPerPage] = useState(20);
 
   const [, setParams] = useSearchParams();
 
   const [errorFromBtn, setErrorFromBtn] = useState(false);
-
-  useEffect(() => {
-    // dispatch(fetchBooks());
-    // setState((prevState) => ({ ...prevState, isLoaded: false }));
-    // searchBooks<HttpResponse>(
-    //   request,
-    //   (page - 1) * countPerPage,
-    //   countPerPage || 20
-    // )
-    //   .then((result) => {
-    //     setState((prevState) => ({
-    //       ...prevState,
-    //       isLoaded: true,
-    //     }));
-    //     setResponse(result);
-    //     setParams({
-    //       page: page.toString(),
-    //     });
-    //     localStorage.setItem('request', request);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     setState((prev) => ({ ...prev, error: true }));
-    //   });
-    //request, page, countPerPage
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const { data, error } = bookAPI.useFetchBookSearchQuery({ query: request });
-  data && dispatch(setTotalItems(data.totalItems));
-
   const throwError = () => {
     setErrorFromBtn(true);
   };
@@ -92,7 +71,7 @@ const App: FC = () => {
   // };
 
   if (errorFromBtn || error) throw new Error("I'm crashed!");
-  else if (isLoading) {
+  else if (isAppLoading) {
     return (
       <div className="wrapper">
         <div className="loading">
@@ -103,24 +82,10 @@ const App: FC = () => {
   } else {
     return (
       <div className="wrapper" data-testid={'app'}>
-        {/*{isLoading && <p>Loading...</p>}*/}
-        {/*{error && <p>Something went wrong</p>}*/}
-        {/*<div>*/}
-        {/*  {data &&*/}
-        {/*    data.items &&*/}
-        {/*    data.items.map((book) => book.volumeInfo.title)}*/}
-        {/*</div>*/}
-
         <Header throwError={throwError} />
         {data && data.totalItems ? (
           <div className="content">
-            <SearchingResults
-              updatePage={(vector) => {}}
-              currentPage={page}
-              countPerPage={countPerPage}
-              updateCountPerPage={(vector) => {}}
-              data={data.items}
-            />
+            <SearchingResults data={data.items} />
           </div>
         ) : (
           <p className="weCantFind" data-testid="nothing-found">

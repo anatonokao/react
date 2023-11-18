@@ -8,16 +8,16 @@ import { IBook } from '../../models/IBook';
 import { useAppSelector } from '../../hooks/redux';
 
 export interface SearchingResultsProps {
-  updatePage: (vector: 'next' | 'prev') => void;
-  // currentPage: number;
-  // countPerPage: number;
-  updateCountPerPage: (count: number) => void;
+  // updatePage: (vector: 'next' | 'prev') => void;
+  // // currentPage: number;
+  // // countPerPage: number;
+  // updateCountPerPage: (count: number) => void;
   data: IBook[];
 }
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
   // const { data } = bookAPI.useFetchBookSearchQuery({});
-
+  const { page } = useAppSelector((state) => state.appReducer);
   const [details, setDetails] = useState(false);
   const navigate = useNavigate();
   return (
@@ -28,7 +28,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
           className={styles.itemsContainer}
           onClick={() => {
             if (details) {
-              navigate(`/?page=${props.currentPage}`);
+              navigate(`/?page=${page}`);
               setDetails(false);
             }
           }}
@@ -36,7 +36,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
           {props.data &&
             props.data.map((item) => (
               <NavLink
-                to={`details/${item.id}?page=${props.currentPage}`}
+                to={`details/${item.id}?page=${page}`}
                 key={item.id}
                 onClick={() => {
                   setDetails(true);
@@ -47,7 +47,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
               </NavLink>
             ))}
         </div>
-        <Outlet context={{ setDetails, currentPage: props.currentPage }} />
+        <Outlet context={{ setDetails, currentPage: page }} />
       </div>
     </>
   );

@@ -4,6 +4,8 @@ import Loading from '/src/assets/Loading.gif';
 import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
 import { bookAPI } from '../../services/BookService';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { appSlice } from '../../store/reducers/BookSlice';
 
 interface DetailsRouteContext {
   setDetails: (value: boolean) => void;
@@ -19,32 +21,12 @@ const Details: FC = () => {
   const context: DetailsRouteContext = useOutletContext();
 
   const { id } = useParams();
-  // const [state, setState] = useState<DetailsState>({
-  //   isLoad: false,
-  //   book: {
-  //     etag: '',
-  //     id: '',
-  //     kind: '',
-  //     saleInfo: { buyLink: '', listPrice: { amount: 0, currencyCode: '' } },
-  //     selfLink: '',
-  //     volumeInfo: {
-  //       title: '',
-  //       subtitle: '',
-  //       authors: [],
-  //       publisher: '',
-  //       publishedDate: '',
-  //       description: '',
-  //       pageCount: 0,
-  //       imageLinks: {
-  //         smallThumbnail: '',
-  //         thumbnail: '',
-  //       },
-  //       language: '',
-  //     },
-  //   },
-  // });
 
+  const dispatch = useAppDispatch();
+  const { setIsDetailsLoading } = appSlice.actions;
   const { data, isLoading } = bookAPI.useFetchBookDetailsQuery(id || '');
+  dispatch(setIsDetailsLoading(isLoading));
+  const { isDetailsLoading } = useAppSelector((state) => state.appReducer);
 
   // useEffect(() => {
   //   if (id) {
@@ -61,7 +43,7 @@ const Details: FC = () => {
   //   }
   // }, [id]);
 
-  return isLoading ? (
+  return isDetailsLoading ? (
     <div className={styles.loading}>
       <img
         data-testid={'loading'}
