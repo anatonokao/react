@@ -25,7 +25,7 @@ const Details: FC = () => {
 
   useEffect(() => {
     dispatch(setIsDetailsLoading(isFetching));
-  }, [isFetching]);
+  });
 
   return isDetailsLoading ? (
     <div className={styles.loading}>

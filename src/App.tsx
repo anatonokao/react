@@ -1,5 +1,5 @@
 import './App.css';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import Header from './components/Header/Header';
 import SearchingResults from './components/SearchingResults/SearchingResults';
 import Loading from './assets/Loading.gif';
@@ -33,14 +33,8 @@ const App: FC = () => {
     if (pageFromParams) {
       dispatch(setPage(pageFromParams || 1));
     } else setParams(`page=${page}`);
-  }, [isFetching, pageFromParams]);
-
-  const [errorFromBtn, setErrorFromBtn] = useState(false);
-  const throwError = () => {
-    setErrorFromBtn(true);
-  };
-
-  if (errorFromBtn || error) throw new Error("I'm crashed!");
+  });
+  if (error) throw new Error("I'm crashed!");
   else if (isAppLoading) {
     return (
       <div className="wrapper">
@@ -52,7 +46,7 @@ const App: FC = () => {
   } else {
     return (
       <div className="wrapper" data-testid={'app'}>
-        <Header throwError={throwError} />
+        <Header />
         {data && data.totalItems ? (
           <div className="content">
             <SearchingResults data={data.items} />

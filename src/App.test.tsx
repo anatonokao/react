@@ -2,25 +2,22 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
-import { AppContextProvider } from './contexts/AppContext/AppContextProvider';
 import App from './App';
 import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
-import { response } from '../tests/mockData';
 import { vi } from 'vitest';
-import { userEvent } from '@testing-library/user-event';
+import { Provider } from 'react-redux';
+import { setupStore } from './store/store';
+import { bookAPI } from './services/BookService';
 
 describe('404', () => {
   it('404 page is displayed when navigating to an invalid route', async () => {
     render(
       <MemoryRouter initialEntries={['/fjkfjgl']}>
-        <AppContextProvider>
-          <Routes>
-            <Route path="/">
-              <Route path="/" element={<App />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
-          </Routes>
-        </AppContextProvider>
+        <Routes>
+          <Route path="/">
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
       </MemoryRouter>
     );
 
@@ -30,40 +27,34 @@ describe('404', () => {
   });
 });
 
-describe('404', () => {
+describe('Nothing found', () => {
   it('Nothing found is displayed if no cards are present', async () => {
-    const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(response),
+    const spyApi = vi.spyOn(bookAPI, 'useFetchBookSearchQuery');
+    spyApi.mockReturnValue({
+      refetch: vi.fn(),
+      data: {
+        kind: '',
+        totalItems: 0,
+        items: [],
+      },
     });
-    global.fetch = vi.fn().mockImplementationOnce(() => mockFetch);
 
     render(
       <MemoryRouter initialEntries={['/']}>
-        <AppContextProvider>
-          <Routes>
-            <Route path="/">
-              <Route path="/" element={<App />} />
-            </Route>
-          </Routes>
-        </AppContextProvider>
+        <Routes>
+          <Route path="/">
+            <Route
+              path="/"
+              element={
+                <Provider store={setupStore()}>
+                  <App />
+                </Provider>
+              }
+            />
+          </Route>
+        </Routes>
       </MemoryRouter>
     );
-
-    const input = await screen.findByTestId('search-input');
-    const button = await screen.findByTestId('search-button');
-
-    const mockFetchNothing = Promise.resolve({
-      json: () =>
-        Promise.resolve({
-          kind: '',
-          totalItems: 0,
-          items: [],
-        }),
-    });
-    global.fetch = vi.fn().mockImplementationOnce(() => mockFetchNothing);
-
-    await userEvent.type(input, 'rtiuopwpetoiioweurtwoeirtwiopeurt');
-    await userEvent.click(button);
 
     const nothingFound = await screen.findByTestId('nothing-found');
 

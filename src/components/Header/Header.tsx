@@ -1,12 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Search from './Search/Search';
 import styles from './Header.module.css';
 
-interface HeaderProps {
-  throwError: () => void;
-}
-
-const Header: FC<HeaderProps> = (props) => {
+const Header: FC = () => {
+  const [error, setError] = useState(false);
+  if (error) throw new Error("I'm crashed!");
   return (
     <header className={styles.header + ' ' + '_container'}>
       <div className={styles.logoAndBtn}>
@@ -14,9 +12,7 @@ const Header: FC<HeaderProps> = (props) => {
         <button
           data-testid="ErrorBtn"
           className={styles.throwErrorBtn}
-          onClick={() => {
-            props.throwError();
-          }}
+          onClick={() => setError(true)}
         >
           Throw Error
         </button>

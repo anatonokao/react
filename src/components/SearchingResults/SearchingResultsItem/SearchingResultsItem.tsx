@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { Item } from '../../../types/Interfaces';
 import styles from './SearchingResultsItem.module.css';
+import { IBook } from '../../../models/IBook';
 
 interface SearchingResultsItemProps {
-  item: Item;
+  item: IBook;
 }
 
 const SearchingResultsItem: FC<SearchingResultsItemProps> = (props) => {

@@ -11,7 +11,6 @@ export interface SearchingResultsProps {
 }
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
-  // const { data } = bookAPI.useFetchBookSearchQuery({});
   const { page } = useAppSelector((state) => state.appReducer);
   const [details, setDetails] = useState(false);
   const navigate = useNavigate();
