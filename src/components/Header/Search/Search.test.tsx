@@ -41,7 +41,6 @@ describe('Search test', () => {
 
 
         const input = await screen.findByTestId('search-input');
-        screen.debug();
         const button = await screen.findByTestId('search-button');
 
         await userEvent.type(input, 'test');

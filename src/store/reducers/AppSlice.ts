@@ -11,7 +11,7 @@ interface AppState {
 }
 
 const initState: AppState = {
-  request: localStorage.getItem('request') || '',
+  request: '',
   isAppLoading: false,
   isDetailsLoading: false,
   totalItems: 0,
@@ -26,7 +26,6 @@ export const appSlice = createSlice({
   reducers: {
     setRequest: (state, action: PayloadAction<string>) => {
       state.request = action.payload;
-      localStorage.setItem('request', action.payload);
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isAppLoading = action.payload;

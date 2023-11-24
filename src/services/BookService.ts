@@ -22,8 +22,10 @@ export const bookAPI = createApi({
   }),
   endpoints: (build) => ({
     fetchBookSearch: build.query<HttpResponse, SearchParams>({
-      query: ({ query = 'book', startIndex = 0, countPerPage = 20 }) => ({
-        url: `/volumes?q=${query}&startIndex=${startIndex}&maxResults=${countPerPage}&key=${API_KEY}`,
+      query: ({ query, startIndex = 0, countPerPage = 20 }) => ({
+        url: `/volumes?q=${
+          query || 'book'
+        }&startIndex=${startIndex}&maxResults=${countPerPage}&key=${API_KEY}`,
       }),
     }),
     fetchBookDetails: build.query<IBook, string>({

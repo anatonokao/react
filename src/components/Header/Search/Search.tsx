@@ -12,11 +12,11 @@ const Search: FC = () => {
   const [inputValue, setInputValue] = useState(request);
 
   const inputRef = React.useRef<HTMLInputElement | null>(null);
-  const [, setParams] = useSearchParams();
+  // const [, setParams] = useSearchParams();
 
   const handleSearch = () => {
     dispatch(setRequest(inputValue));
-    setParams('page=1');
+    // setParams('page=1');
   };
 
   return (

@@ -5,6 +5,7 @@ import Pagination from './Pagination/Pagination';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IBook } from '../../models/IBook';
 import { useAppSelector } from '../../hooks/redux';
+import Link from 'next/link';
 
 export interface SearchingResultsProps {
   data: IBook[];
@@ -13,7 +14,7 @@ export interface SearchingResultsProps {
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
   const { page } = useAppSelector((state) => state.appReducer);
   const [details, setDetails] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <>
       <Pagination />
@@ -22,15 +23,15 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
           className={styles.itemsContainer}
           onClick={() => {
             if (details) {
-              navigate(`/?page=${page}`);
+              // navigate(`/?page=${page}`);
               setDetails(false);
             }
           }}
         >
           {props.data &&
             props.data.map((item) => (
-              <NavLink
-                to={`details/${item.id}?page=${page}`}
+              <Link
+                href={`details/${item.id}?page=${page}`}
                 key={item.id}
                 onClick={() => {
                   setDetails(true);
@@ -38,7 +39,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
                 data-testid="book-item"
               >
                 <SearchingResultsItem key={item.id} item={item} />
-              </NavLink>
+              </Link>
             ))}
         </div>
         <Outlet context={{ setDetails, currentPage: page }} />

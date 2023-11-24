@@ -11,24 +11,24 @@ const Pagination: FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const [params, setParams] = useSearchParams();
+  // const [params, setParams] = useSearchParams();
 
-  const handleNextPage = () => {
-    const pageFromParams = params.get('page');
-    setParams(`page=${pageFromParams ? Number(pageFromParams) + 1 : 1}`);
-  };
-
-  const handlePrevPage = () => {
-    const pageFromParams = params.get('page');
-    setParams(`page=${pageFromParams ? Number(pageFromParams) - 1 : 1}`);
-  };
+  // const handleNextPage = () => {
+  //   const pageFromParams = params.get('page');
+  //   setParams(`page=${pageFromParams ? Number(pageFromParams) + 1 : 1}`);
+  // };
+  //
+  // const handlePrevPage = () => {
+  //   const pageFromParams = params.get('page');
+  //   setParams(`page=${pageFromParams ? Number(pageFromParams) - 1 : 1}`);
+  // };
 
   return (
     <div className={styles.pagination}>
       <button
         data-testid={'PaginationPrev'}
         type="button"
-        onClick={handlePrevPage}
+        onClick={() => {}}
         className={styles.btn}
       >
         {'🡄'}
@@ -37,7 +37,7 @@ const Pagination: FC = () => {
       <button
         data-testid={'PaginationNext'}
         type="button"
-        onClick={handleNextPage}
+        onClick={() => {}}
         className={styles.btn}
       >
         {'🡆'}
@@ -48,7 +48,7 @@ const Pagination: FC = () => {
         id="maxCount"
         onChange={(e) => {
           dispatch(setCountPerPage(Number(e.target.value)));
-          setParams('page=1');
+          // setParams('page=1');
         }}
         value={countPerPage}
       >

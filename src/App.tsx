@@ -1,4 +1,3 @@
-import './App.css';
 import React, { FC, useEffect } from 'react';
 import Header from './components/Header/Header';
 import SearchingResults from './components/SearchingResults/SearchingResults';
@@ -8,7 +7,7 @@ import { bookAPI } from './services/BookService';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { appSlice } from './store/reducers/AppSlice';
 
-const App: FC = () => {
+const HomePage: FC = () => {
   const dispatch = useAppDispatch();
 
   const { setTotalItems, setIsLoading, setPage } = appSlice.actions;
@@ -16,8 +15,8 @@ const App: FC = () => {
     (state) => state.appReducer
   );
 
-  const [params, setParams] = useSearchParams();
-  const pageFromParams = Number(params.get('page'));
+  // const [params, setParams] = useSearchParams();
+  // const pageFromParams = Number(params.get('page'));
 
   const { data, isFetching, error } = bookAPI.useFetchBookSearchQuery({
     query: request,
@@ -30,16 +29,16 @@ const App: FC = () => {
 
     dispatch(setIsLoading(isFetching));
 
-    if (pageFromParams) {
-      dispatch(setPage(pageFromParams || 1));
-    } else setParams(`page=${page}`);
+    // if (pageFromParams) {
+    //   dispatch(setPage(pageFromParams || 1));
+    // } else setParams(`page=${page}`);
   });
   if (error) throw new Error("I'm crashed!");
   else if (isAppLoading) {
     return (
       <div className="wrapper">
         <div className="loading">
-          <img src={Loading} alt="Loading" />
+          <img src={Loading.src} alt="Loading" />
         </div>
       </div>
     );
@@ -62,4 +61,4 @@ const App: FC = () => {
   }
 };
 
-export default App;
+export default HomePage;
