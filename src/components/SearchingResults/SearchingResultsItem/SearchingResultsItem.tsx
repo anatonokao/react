@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import styles from './SearchingResultsItem.module.css';
 import { IBook } from '../../../models/IBook';
+import noImg from '../../../assets/no-image.png';
 
 interface SearchingResultsItemProps {
   item: IBook;
@@ -14,7 +15,7 @@ const SearchingResultsItem: FC<SearchingResultsItemProps> = (props) => {
         src={
           (props.item.volumeInfo.imageLinks &&
             props.item.volumeInfo.imageLinks.thumbnail) ||
-          '/src/assets/no-image.png'
+          noImg.src
         }
         alt="thumbnail"
       />

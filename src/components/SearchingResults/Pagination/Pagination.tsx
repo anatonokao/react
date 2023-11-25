@@ -55,7 +55,7 @@ const Pagination: FC = () => {
           router.push({
             query: {
               ...router.query,
-              page: router.query.page ? Number(router.query.page) + 1 : 1,
+              page: router.query.page ? Number(router.query.page) + 1 : 2,
             },
           });
         }}

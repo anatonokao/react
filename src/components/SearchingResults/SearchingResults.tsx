@@ -6,12 +6,16 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { IBook } from '../../models/IBook';
 import { useAppSelector } from '../../hooks/redux';
 import Link from 'next/link';
+import Details from './Details/Details';
+import { useRouter } from 'next/router';
 
 export interface SearchingResultsProps {
   data: IBook[];
+  detailsData: IBook;
 }
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
+  const router = useRouter();
   const { page } = useAppSelector((state) => state.appReducer);
   const [details, setDetails] = useState(false);
   // const navigate = useNavigate();
@@ -22,7 +26,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
         <div
           className={styles.itemsContainer}
           onClick={() => {
-            if (details) {
+            if (router.query.id) {
               // navigate(`/?page=${page}`);
               setDetails(false);
             }
@@ -31,7 +35,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
           {props.data &&
             props.data.map((item) => (
               <Link
-                href={`details/${item.id}?page=${page}`}
+                href={`/?id=${item.id}&page=${page}`}
                 key={item.id}
                 onClick={() => {
                   setDetails(true);
@@ -42,7 +46,7 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
               </Link>
             ))}
         </div>
-        <Outlet context={{ setDetails, currentPage: page }} />
+        {router.query.id && <Details details={props.detailsData} />}
       </div>
     </>
   );
