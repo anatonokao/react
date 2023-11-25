@@ -6,22 +6,13 @@ import { useSearchParams } from 'react-router-dom';
 import { useRouter } from 'next/router';
 
 const Search: FC = () => {
-  // const { request } = useAppSelector((state) => state.appReducer);
-  // const { setRequest } = appSlice.actions;
-  // const dispatch = useAppDispatch();
-  //
   const [inputValue, setInputValue] = useState('');
-  //
   const inputRef = React.useRef<HTMLInputElement | null>(null);
-  // // const [, setParams] = useSearchParams();
-
   const router = useRouter();
 
   const handleSearch = () => {
-    // dispatch(setRequest(inputValue));
-    // setParams('page=1');
     router.push({
-      query: { q: inputValue },
+      query: { ...router.query, q: inputValue },
     });
   };
 

@@ -12,8 +12,8 @@ export interface HttpResponse {
 
 type SearchParams = {
   query?: string;
-  startIndex?: number;
-  countPerPage?: number;
+  startIndex?: string;
+  countPerPage?: string;
 };
 
 export const bookAPI = createApi({
