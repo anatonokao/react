@@ -8,87 +8,76 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
 import { appSlice } from '../../../store/reducers/AppSlice';
 import closeBtn from '../../../assets/close-btn.svg';
 
-interface DetailsRouteContext {
+interface DetailsRouteProps {
   setDetails: (value: boolean) => void;
   currentPage: number;
 }
 
-const Details: FC = () => {
-  const context: DetailsRouteContext = useOutletContext();
+const Details: FC<DetailsRouteProps> = (props) => {
+  // const { id } = useParams();
+  // const { data }: props;
 
-  const { id } = useParams();
+  // const dispatch = useAppDispatch();
+  // const { setIsDetailsLoading } = appSlice.actions;
+  // const { data, isFetching } = bookAPI.useFetchBookDetailsQuery(id || '');
+  // const { isDetailsLoading } = useAppSelector((state) => state.appReducer);
 
-  const dispatch = useAppDispatch();
-  const { setIsDetailsLoading } = appSlice.actions;
-  const { data, isFetching } = bookAPI.useFetchBookDetailsQuery(id || '');
-  const { isDetailsLoading } = useAppSelector((state) => state.appReducer);
+  // useEffect(() => {
+  //   dispatch(setIsDetailsLoading(isFetching));
+  // });
 
-  useEffect(() => {
-    dispatch(setIsDetailsLoading(isFetching));
-  });
-
-  return isDetailsLoading ? (
-    <div className={styles.loading}>
-      <img
-        data-testid={'loading'}
-        className={styles.loading}
-        src={Loading}
-        alt="loading"
-      />
-    </div>
-  ) : (
+  return (
     <div className={styles.details} data-testid={'details'}>
       <NavLink
-        to={`/?page=${context.currentPage}`}
+        to={`/?page=${props.currentPage}`}
         data-testid="close-details-btn"
       >
         <button
           type="button"
           className={styles.closeBtn}
-          onClick={() => context.setDetails(false)}
+          onClick={() => props.setDetails(false)}
         >
           <img src={closeBtn} alt="close" />
         </button>
       </NavLink>
-      <div data-testid={'title'} className={styles.title}>
-        {data && data.volumeInfo.title}
-      </div>
-      <img
-        data-testid={'img'}
-        src={
-          data && data.volumeInfo.imageLinks
-            ? data && data.volumeInfo.imageLinks.thumbnail
-            : '/src/assets/no-image.png'
-        }
-        className={styles.thumbnail}
-        alt="Thumbnail"
-      />
-      <div data-testid={'description'} className={styles.description}>
-        {parse((data && data.volumeInfo.description) || 'No description')}
-      </div>
-      {data && data.saleInfo.listPrice ? (
-        <div className={styles.price}>
-          <span className={styles.currency}>
-            {data && data.saleInfo.listPrice.currencyCode}
-          </span>{' '}
-          {data && data.saleInfo.listPrice.amount}
-        </div>
-      ) : null}
-      {data && data.saleInfo.buyLink ? (
-        <a
-          data-testid={'buyLink'}
-          href={data && data.saleInfo.buyLink}
-          className={styles.buyLink}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Buy
-        </a>
-      ) : (
-        <a className={styles.buyLink} target="_blank" rel="noreferrer">
-          Unavailable
-        </a>
-      )}
+      {/*<div data-testid={'title'} className={styles.title}>*/}
+      {/*  {data && data.volumeInfo.title}*/}
+      {/*</div>*/}
+      {/*<img*/}
+      {/*  data-testid={'img'}*/}
+      {/*  src={*/}
+      {/*    data && data.volumeInfo.imageLinks*/}
+      {/*      ? data && data.volumeInfo.imageLinks.thumbnail*/}
+      {/*      : '/src/assets/no-image.png'*/}
+      {/*  }*/}
+      {/*  className={styles.thumbnail}*/}
+      {/*  alt="Thumbnail"*/}
+      {/*/>*/}
+      {/*<div data-testid={'description'} className={styles.description}>*/}
+      {/*  {parse((data && data.volumeInfo.description) || 'No description')}*/}
+      {/*</div>*/}
+      {/*{data && data.saleInfo.listPrice ? (*/}
+      {/*  <div className={styles.price}>*/}
+      {/*    <span className={styles.currency}>*/}
+      {/*      {data && data.saleInfo.listPrice.currencyCode}*/}
+      {/*    </span>{' '}*/}
+      {/*    {data && data.saleInfo.listPrice.amount}*/}
+      {/*  </div>*/}
+      {/*) : null}*/}
+      {/*{data && data.saleInfo.buyLink ? (*/}
+      {/*  <a*/}
+      {/*    data-testid={'buyLink'}*/}
+      {/*    href={data && data.saleInfo.buyLink}*/}
+      {/*    className={styles.buyLink}*/}
+      {/*    target="_blank"*/}
+      {/*    rel="noreferrer"*/}
+      {/*  >*/}
+      {/*    Buy*/}
+      {/*  </a>*/}) : (
+      <a className={styles.buyLink} target="_blank" rel="noreferrer">
+        Unavailable
+      </a>
+      {/*)}*/}
     </div>
   );
 };

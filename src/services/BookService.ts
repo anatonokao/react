@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IBook as Item, IBook } from '../models/IBook';
+import { HYDRATE } from 'next-redux-wrapper';
 
 const API_KEY: string = 'AIzaSyDYIbMfKgnY0ApGq1a3hM2Z3-g1GlqYa7o';
 
@@ -20,6 +21,11 @@ export const bookAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://www.googleapis.com/books/v1',
   }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   endpoints: (build) => ({
     fetchBookSearch: build.query<HttpResponse, SearchParams>({
       query: ({ query, startIndex = 0, countPerPage = 20 }) => ({
@@ -35,3 +41,7 @@ export const bookAPI = createApi({
     }),
   }),
 });
+
+export const {
+  util: { getRunningQueriesThunk },
+} = bookAPI;

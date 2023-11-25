@@ -1,9 +1,15 @@
-import { wrapper } from '../src/store/store';
+import { setupStore, wrapper } from '../src/store/store';
 import '../src/index.css';
 import '../src/App.css';
+import { Provider } from 'react-redux';
 
-export function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+export default function App({ Component, pageProps }) {
+  const { store } = wrapper.useWrappedStore(pageProps);
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />;
+    </Provider>
+  );
 }
 
-export default wrapper.withRedux(App);
+// export default wrapper.useWrappedStore(App);
