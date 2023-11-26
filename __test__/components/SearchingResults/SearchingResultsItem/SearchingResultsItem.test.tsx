@@ -1,18 +1,15 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import SearchingResultsItem from './SearchingResultsItem';
+import SearchingResultsItem from '@/components/SearchingResults/SearchingResultsItem/SearchingResultsItem';
 import { book } from '../../../../tests/mockData';
 
 describe('Main component', () => {
-  const item = book;
-
   it('check render', () => {
-    render(<SearchingResultsItem item={item} />);
+    render(<SearchingResultsItem item={book} />);
     expect(screen.getByTestId('SearchingResultsItem')).toBeInTheDocument();
   });
 
-  it('Chard component renders the relevant card data', () => {
-    render(<SearchingResultsItem item={item} />);
+  it('Card component renders the relevant card data', () => {
+    render(<SearchingResultsItem item={book} />);
 
     const bookItem = screen.getByTestId('SearchingResultsItem');
     const img = screen.getByAltText('thumbnail');

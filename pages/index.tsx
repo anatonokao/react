@@ -1,9 +1,21 @@
 import Header from '../components/Header/Header';
 import SearchingResults from '../components/SearchingResults/SearchingResults';
-import { bookAPI, getRunningQueriesThunk } from '../src/services/BookService';
+import {
+  bookAPI,
+  getRunningQueriesThunk,
+  HttpResponse,
+} from '../src/services/BookService';
 import { wrapper } from '../src/store/store';
+import { IBook } from '../src/models/IBook';
+import { FC } from 'react';
 
-export default function Home({ data, isError, details }) {
+type HomeProps = {
+  data: HttpResponse;
+  isError: boolean;
+  details: IBook;
+};
+
+const Home: FC<HomeProps> = ({ data, isError, details }) => {
   if (isError) throw new Error("I'm crashed!");
   else {
     return (
@@ -22,7 +34,9 @@ export default function Home({ data, isError, details }) {
       </div>
     );
   }
-}
+};
+
+export default Home;
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {

@@ -43,6 +43,7 @@ const Pagination: FC = () => {
         {'🡆'}
       </button>
       <select
+        data-testid={'pagination-select'}
         className={styles.countSelector}
         name="maxCount"
         id="maxCount"
@@ -53,9 +54,13 @@ const Pagination: FC = () => {
         }}
         value={countPerPage}
       >
-        <option value="10">10</option>
+        <option value="10" data-testid={'pagination-select-option-10'}>
+          10
+        </option>
         <option value="20">20</option>
-        <option value="30">30</option>
+        <option value="30" data-testid={'pagination-select-option-30'}>
+          30
+        </option>
       </select>
     </div>
   );
