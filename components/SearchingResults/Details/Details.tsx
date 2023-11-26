@@ -1,16 +1,10 @@
-import React, { FC, useEffect } from 'react';
+import { FC } from 'react';
 import styles from './Details.module.css';
-import Loading from '/src/assets/Loading.gif';
-import { NavLink, useOutletContext, useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
-import { bookAPI, getRunningQueriesThunk } from '../../../services/BookService';
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
-import { appSlice } from '../../../store/reducers/AppSlice';
 import closeBtn from '../../../assets/close-btn.svg';
-import Link from 'next/link';
-import { IBook } from '../../../models/IBook';
-import { wrapper } from '../../../store/store';
+import { IBook } from '../../../src/models/IBook';
 import { useRouter } from 'next/router';
+import noImg from '../../../assets/no-image.png';
 
 interface DetailsRouteProps {
   setDetails?: (value: boolean) => void;
@@ -19,28 +13,18 @@ interface DetailsRouteProps {
 }
 
 const Details: FC<DetailsRouteProps> = ({ details }) => {
-  // const { id } = useParams();
   const data = details;
-  // const dispatch = useAppDispatch();
-  // const { setIsDetailsLoading } = appSlice.actions;
-  // const { data, isFetching } = bookAPI.useFetchBookDetailsQuery(id || '');
-  // const { isDetailsLoading } = useAppSelector((state) => state.appReducer);
-
-  // useEffect(() => {
-  //   dispatch(setIsDetailsLoading(isFetching));
-  // });
+  const router = useRouter();
 
   return (
     <div className={styles.details} data-testid={'details'}>
-      {/*<Link href="/" data-testid="close-details-btn">*/}
-      {/*  <button*/}
-      {/*    type="button"*/}
-      {/*    className={styles.closeBtn}*/}
-      {/*    onClick={() => props.setDetails(false)}*/}
-      {/*  >*/}
-      {/*    <img src={closeBtn} alt="close" />*/}
-      {/*  </button>*/}
-      {/*</Link>*/}
+      <button
+        type="button"
+        className={styles.closeBtn}
+        onClick={() => router.push({ query: { ...router.query, id: '' } })}
+      >
+        <img src={closeBtn.src} alt="close" />
+      </button>
       <div data-testid={'title'} className={styles.title}>
         {data && data.volumeInfo.title}
       </div>
@@ -49,7 +33,7 @@ const Details: FC<DetailsRouteProps> = ({ details }) => {
         src={
           data && data.volumeInfo.imageLinks
             ? data && data.volumeInfo.imageLinks.thumbnail
-            : '/src/assets/no-image.png'
+            : noImg.src
         }
         className={styles.thumbnail}
         alt="Thumbnail"

@@ -30,13 +30,12 @@
       }
     ]
   },
-  "include": [
-    "src",
-    "tests/setupTests",
-    "./dist/types/**/*.ts",
-    "./next-env.d.ts"
-  ],
   "exclude": [
     "./node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
   ]
 }

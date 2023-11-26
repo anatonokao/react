@@ -1,18 +1,15 @@
 import React, { FC, useState } from 'react';
 import styles from './Search.module.css';
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
-import { appSlice } from '../../../store/reducers/AppSlice';
-import { useSearchParams } from 'react-router-dom';
 import { useRouter } from 'next/router';
 
 const Search: FC = () => {
-  const [inputValue, setInputValue] = useState('');
-  const inputRef = React.useRef<HTMLInputElement | null>(null);
   const router = useRouter();
+  const [inputValue, setInputValue] = useState(router.query.q ?? '');
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleSearch = () => {
     router.push({
-      query: { ...router.query, q: inputValue },
+      query: { ...router.query, q: inputValue, page: 1 },
     });
   };
 

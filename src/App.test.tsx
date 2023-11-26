@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import React from 'react';
 import App from './App';
-import NotFoundPage from './components/pages/NotFoundPage/NotFoundPage';
+import NotFoundPage from '../pages/404';
 import { vi } from 'vitest';
 import { Provider } from 'react-redux';
 import { setupStore } from './store/store';

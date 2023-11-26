@@ -1,11 +1,8 @@
-import React, { FC, useState } from 'react';
+import { FC } from 'react';
 import SearchingResultsItem from './SearchingResultsItem/SearchingResultsItem';
 import styles from './SearchingResults.module.css';
 import Pagination from './Pagination/Pagination';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { IBook } from '../../models/IBook';
-import { useAppSelector } from '../../hooks/redux';
-import Link from 'next/link';
+import { IBook } from '../../src/models/IBook';
 import Details from './Details/Details';
 import { useRouter } from 'next/router';
 
@@ -16,9 +13,6 @@ export interface SearchingResultsProps {
 
 const SearchingResults: FC<SearchingResultsProps> = (props) => {
   const router = useRouter();
-  const { page } = useAppSelector((state) => state.appReducer);
-  const [details, setDetails] = useState(false);
-  // const navigate = useNavigate();
   return (
     <>
       <Pagination />
@@ -27,23 +21,23 @@ const SearchingResults: FC<SearchingResultsProps> = (props) => {
           className={styles.itemsContainer}
           onClick={() => {
             if (router.query.id) {
-              // navigate(`/?page=${page}`);
-              setDetails(false);
+              router.push({ query: { ...router.query, id: '' } });
             }
           }}
         >
           {props.data &&
             props.data.map((item) => (
-              <Link
-                href={`/?id=${item.id}&page=${page}`}
+              <button
                 key={item.id}
                 onClick={() => {
-                  setDetails(true);
+                  if (!router.query.id) {
+                    router.push({ query: { ...router.query, id: item.id } });
+                  }
                 }}
                 data-testid="book-item"
               >
                 <SearchingResultsItem key={item.id} item={item} />
-              </Link>
+              </button>
             ))}
         </div>
         {router.query.id && <Details details={props.detailsData} />}

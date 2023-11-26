@@ -1,29 +1,8 @@
 import React, { FC } from 'react';
 import styles from './Pagination.module.css';
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux';
-import { appSlice } from '../../../store/reducers/AppSlice';
-import { useSearchParams } from 'react-router-dom';
 import { useRouter } from 'next/router';
 
 const Pagination: FC = () => {
-  // const { page, countPerPage } = useAppSelector((state) => state.appReducer);
-  //
-  // const { setCountPerPage } = appSlice.actions;
-  //
-  // const dispatch = useAppDispatch();
-  //
-  // // const [params, setParams] = useSearchParams();
-  //
-  // // const handleNextPage = () => {
-  // //   const pageFromParams = params.get('page');
-  // //   setParams(`page=${pageFromParams ? Number(pageFromParams) + 1 : 1}`);
-  // // };
-  // //
-  // // const handlePrevPage = () => {
-  // //   const pageFromParams = params.get('page');
-  // //   setParams(`page=${pageFromParams ? Number(pageFromParams) - 1 : 1}`);
-  // // };
-
   const router = useRouter();
 
   const page = router.query.page || '1';

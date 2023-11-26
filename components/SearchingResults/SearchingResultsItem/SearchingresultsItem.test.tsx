@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import SearchingResultsItem from './SearchingResultsItem';
 import { book } from '../../../../tests/mockData';
+
 describe('Main component', () => {
   const item = book;
 

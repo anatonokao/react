@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styles from './SearchingResultsItem.module.css';
-import { IBook } from '../../../models/IBook';
+import { IBook } from '../../../src/models/IBook';
 import noImg from '../../../assets/no-image.png';
 
 interface SearchingResultsItemProps {
@@ -29,7 +29,7 @@ const SearchingResultsItem: FC<SearchingResultsItemProps> = (props) => {
 
       {props.item.saleInfo.listPrice && (
         <div>
-          Price:{' '}
+          Price:
           {props.item.saleInfo.listPrice.currencyCode +
             ' ' +
             props.item.saleInfo.listPrice.amount}

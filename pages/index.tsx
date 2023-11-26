@@ -1,43 +1,11 @@
-// import Layout from '../components/Layout';
-// import HomePage from '../src/App';
-import Loading from '../src/assets/Loading.gif';
-
-import Header from '../src/components/Header/Header';
-import SearchingResults from '../src/components/SearchingResults/SearchingResults';
+import Header from '../components/Header/Header';
+import SearchingResults from '../components/SearchingResults/SearchingResults';
 import { bookAPI, getRunningQueriesThunk } from '../src/services/BookService';
 import { wrapper } from '../src/store/store';
-import { Router, useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 
 export default function Home({ data, isError, details }) {
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const start = () => {
-      setLoading(true);
-    };
-    const end = () => {
-      setLoading(false);
-    };
-    Router.events.on('routeChangeStart', start);
-    Router.events.on('routeChangeComplete', end);
-    Router.events.on('routeChangeError', end);
-    return () => {
-      Router.events.off('routeChangeStart', start);
-      Router.events.off('routeChangeComplete', end);
-      Router.events.off('routeChangeError', end);
-    };
-  }, []);
-
   if (isError) throw new Error("I'm crashed!");
-  else if (loading) {
-    return (
-      <div className="wrapper">
-        <div className="loading">
-          <img src={Loading.src} alt="Loading" />
-        </div>
-      </div>
-    );
-  } else {
+  else {
     return (
       <div className="wrapper" data-testid={'app'}>
         <Header />
@@ -60,7 +28,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
     const { q, countPerPage, page, id } = context.query;
 
-    const { data, isError, isLoading } = await store.dispatch(
+    const { data } = await store.dispatch(
       bookAPI.endpoints.fetchBookSearch.initiate({
         query: q ? q.toString() : 'book',
         countPerPage: countPerPage ? countPerPage.toString() : '20',
@@ -79,8 +47,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
     return {
       props: {
         data: data || null,
-        isError,
-        isLoading,
         details: detailsData.data || null,
       },
     };
