@@ -7,6 +7,7 @@ import { FormSchema } from '../../utils/yup/yup';
 import { useAppDispatch } from '../../store/hooks/redux';
 import { cardsSlice } from '../../store/reducers/AppSlice';
 import { ValidationError } from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 interface FormElements extends HTMLFormControlsCollection {
   name: HTMLInputElement
@@ -35,6 +36,7 @@ interface InputErrors {
 const UncontrolledForm = () => {
   const dispatch = useAppDispatch();
   const { addCard } = cardsSlice.actions;
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState<InputErrors>({
     name: [],
@@ -82,6 +84,7 @@ const UncontrolledForm = () => {
             image: FR.result as string,
           }),
         );
+        navigate('/');
       };
     } catch (e) {
       const formErrors = e as ValidationError;
