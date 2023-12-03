@@ -9,7 +9,8 @@ export const FormSchema = yup.object({
       'capitalize',
       'First letter must be in uppercase',
       (val) => !!val && val[0] === val[0].toUpperCase(),
-    ),
+    )
+    .matches(/[A-Za-zА-Яа-я ]/, 'По ебалу дать?'),
   age: yup
     .number()
     .required()
@@ -29,8 +30,8 @@ export const FormSchema = yup.object({
       };
       res.upper = /[A-Z]/.test(value) ? '' : 'u';
       res.letter = /[a-z]/.test(value) ? '' : 'l';
-      res.digit = /[!@#$%^&*()\-_=+{};:,<.>]/.test(value) ? '' : 'd';
-      res.spec_char = /[0-9]/.test(value) ? '' : 's';
+      res.digit = /[0-9]/.test(value) ? '' : 'd';
+      res.spec_char = /[!@#$%^&*()\-_=+{};:,<.>]/.test(value) ? '' : 's';
 
       return Object.values(res).join('')
         ? this.createError({
@@ -39,10 +40,6 @@ export const FormSchema = yup.object({
           })
         : true;
     }),
-  // .matches(/[A-Z]/, 'upper')
-  // .matches(/[a-z]/, 'lower')
-  // .matches(/[1-9]/, 'digit')
-  // .matches(/[!@#$%^&*()\-_=+{};:,<.>]/, 'spec_char'),
   repeatPassword: yup
     .string()
     .required('This field is required')

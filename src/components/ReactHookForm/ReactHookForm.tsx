@@ -6,6 +6,8 @@ import { FormSchema } from '../../utils/yup/yup';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import { cardsSlice } from '../../store/reducers/AppSlice';
 import { useNavigate } from 'react-router-dom';
+import InputField from '../InputField/InputField';
+import Autocomplete from '../Autocomplete/Autocomplete';
 
 interface IFormFields {
   name: string
@@ -51,38 +53,29 @@ const ReactHookForm = () => {
   return (
     <div>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <label className={styles.label}>
-          Name
-          <input
-            type='text'
-            placeholder='Name'
-            {...register('name')}
-            className={errors.name && styles.invalidField}
-          />
-          <div className={styles.error}>{errors.name?.message}</div>
-        </label>
+        <InputField
+          inputType='text'
+          placeholder='Name'
+          error={errors.name}
+          labelText='Name'
+          register={register('name')}
+        />
 
-        <label className={styles.label}>
-          Age
-          <input
-            type='number'
-            placeholder='Age'
-            {...register('age')}
-            className={errors.age && styles.invalidField}
-          />
-          <div className={styles.error}>{errors.age?.message}</div>
-        </label>
+        <InputField
+          inputType='number'
+          placeholder='Age'
+          error={errors.age}
+          labelText='Age'
+          register={register('age')}
+        />
 
-        <label className={styles.label}>
-          Email
-          <input
-            type='text'
-            placeholder='Email'
-            {...register('email')}
-            className={errors.email && styles.invalidField}
-          />
-          <div className={styles.error}>{errors.email?.message}</div>
-        </label>
+        <InputField
+          inputType='text'
+          placeholder='Email'
+          error={errors.email}
+          labelText='Email'
+          register={register('email')}
+        />
 
         <label className={styles.label + ' ' + styles.password}>
           Password
@@ -107,16 +100,13 @@ const ReactHookForm = () => {
           <div className={styles.error}>{errors.password?.message}</div>
         </label>
 
-        <label className={styles.label}>
-          Repeat password
-          <input
-            type='password'
-            placeholder='Repeat password'
-            {...register('repeatPassword')}
-            className={errors.repeatPassword && styles.invalidField}
-          />
-          <div className={styles.error}>{errors.repeatPassword?.message}</div>
-        </label>
+        <InputField
+          inputType='password'
+          placeholder='Repeat password'
+          error={errors.repeatPassword}
+          labelText='Repeat password'
+          register={register('repeatPassword')}
+        />
 
         <label className={styles.label}>
           Gender
@@ -134,20 +124,15 @@ const ReactHookForm = () => {
 
         <label className={styles.label}>
           Choose your country
-          <input
-            type='search'
-            placeholder={'United States, Russia, Canada etc.'}
-            autoComplete='nope'
-            list='countries'
-            {...register('country')}
-            className={errors.country && styles.invalidField}
+          <Autocomplete
+            data={countries}
+            inputType='search'
+            placeholder='United States, Russia, Canada etc.'
+            register={register('country')}
+            className={styles.invalidField}
+            error={errors.country?.message}
           />
           <div className={styles.error}>{errors.country?.message}</div>
-          <datalist id='countries'>
-            {countries.map((country, index) => (
-              <option key={index} value={country}></option>
-            ))}
-          </datalist>
         </label>
 
         <label className={styles.label}>
