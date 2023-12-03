@@ -97,7 +97,20 @@ const ReactHookForm = () => {
                 : {}
             }
           />
-          <div className={styles.error}>{errors.password?.message}</div>
+          <div className={styles.error}>
+            {(errors.password?.message &&
+              errors.password?.message.includes('u') &&
+              'Password must be contain 1 upper letter') ||
+              (errors.password?.message &&
+                errors.password?.message.includes('l') &&
+                'Password must be contain 1 lower letter') ||
+              (errors.password?.message &&
+                errors.password?.message.includes('s') &&
+                'Password must be contain 1 special character') ||
+              (errors.password?.message &&
+                errors.password?.message.includes('d') &&
+                'Password must be contain 1 digit')}
+          </div>
         </label>
 
         <InputField
@@ -118,6 +131,9 @@ const ReactHookForm = () => {
             <option value='' disabled hidden></option>
             <option value='male'>male</option>
             <option value='female'>female</option>
+            <option value='binary'>binary</option>
+            <option value='binary'>binary</option>
+            <option value='binary'>binary</option>
           </select>
           <div className={styles.error}>{errors.gender?.message}</div>
         </label>
