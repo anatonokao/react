@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FormSchema } from '../../utils/yup/yup';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import { cardsSlice } from '../../store/reducers/AppSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface IFormFields {
   name: string
@@ -20,6 +21,7 @@ interface IFormFields {
 
 const ReactHookForm = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { addCard } = cardsSlice.actions;
   const countries = useAppSelector((state) => state.countries);
 
@@ -27,17 +29,23 @@ const ReactHookForm = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<IFormFields>({ mode: 'all', resolver: yupResolver(FormSchema) });
-  const onSubmit: SubmitHandler<IFormFields> = async (data) => {
+    getFieldState,
+  } = useForm<IFormFields>({
+    mode: 'all',
+    resolver: yupResolver(FormSchema),
+  });
+  const onSubmit: SubmitHandler<IFormFields> = (data) => {
     const FR = new FileReader();
     FR.readAsDataURL(data.image[0]);
-    FR.onloadend = () =>
+    FR.onloadend = () => {
       dispatch(
         addCard({
           ...data,
           image: FR.result as string,
         }),
       );
+      navigate('/');
+    };
   };
 
   return (
@@ -76,13 +84,25 @@ const ReactHookForm = () => {
           <div className={styles.error}>{errors.email?.message}</div>
         </label>
 
-        <label className={styles.label}>
+        <label className={styles.label + ' ' + styles.password}>
           Password
           <input
             type='password'
             placeholder='Password'
             {...register('password')}
             className={errors.password && styles.invalidField}
+            style={
+              getFieldState('password').isDirty
+                ? {
+                    borderBottom: `5px solid ${
+                      (!errors.password && '#5bc058') ||
+                      (errors.password?.message?.length === 1 && '#c0be58') ||
+                      (errors.password?.message?.length === 2 && '#c08c58') ||
+                      (errors.password?.message && '#ff5f5f')
+                    }`,
+                  }
+                : {}
+            }
           />
           <div className={styles.error}>{errors.password?.message}</div>
         </label>

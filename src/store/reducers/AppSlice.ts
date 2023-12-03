@@ -12,18 +12,7 @@ export interface ICard {
 }
 
 const initState: { cards: ICard[] } = {
-  cards: [
-    // {
-    //   name: 'penis',
-    //   age: 32,
-    //   email: 'povelitel.123@gmail.com',
-    //   password: '123',
-    //   gender: 'male',
-    //   image: img,
-    //   country: 'Russia',
-    //   t_and_c: true,
-    // },
-  ],
+  cards: [],
 };
 
 export const cardsSlice = createSlice({
