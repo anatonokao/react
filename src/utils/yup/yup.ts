@@ -10,7 +10,7 @@ export const FormSchema = yup.object({
       'First letter must be in uppercase',
       (val) => !!val && val[0] === val[0].toUpperCase(),
     )
-    .matches(/[A-Za-zА-Яа-я ]/, 'По ебалу дать?'),
+    .matches(/[A-Za-zА-Яа-я ]/, 'Incorrect name'),
   age: yup
     .number()
     .required()

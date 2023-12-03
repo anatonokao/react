@@ -18,8 +18,8 @@ const InputField: FC<InputFieldProps> = (props) => {
       <input
         type={props.inputType}
         placeholder={props.placeholder}
-        {...props.register}
         name={props.name}
+        {...props.register}
         className={props.error?.message && styles.invalidField}
       />
       <div className={styles.error}>{props.error?.message}</div>

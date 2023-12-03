@@ -125,7 +125,7 @@ const UncontrolledForm = () => {
         <InputField
           inputType='text'
           placeholder='Email'
-          // error={errors.email}
+          error={{ message: errors.email[0] }}
           labelText='Email'
           name='email'
         />
@@ -136,27 +136,38 @@ const UncontrolledForm = () => {
             type='password'
             placeholder='Password'
             name='password'
-            //className={errors.password && styles.invalidField}
-            // style={
-            //   getFieldState('password').isDirty
-            //     ? {
-            //         borderBottom: `5px solid ${
-            //           (!errors.password && '#5bc058') ||
-            //           (errors.password?.message?.length === 1 && '#c0be58') ||
-            //           (errors.password?.message?.length === 2 && '#c08c58') ||
-            //           (errors.password?.message && '#ff5f5f')
-            //         }`,
-            //       }
-            //     : {}
-            // }
+            style={
+              errors.password[0]
+                ? {
+                    borderBottom: `5px solid ${
+                      (errors.password[0].length === 1 && '#c0be58') ||
+                      (errors.password[0].length === 2 && '#c08c58') ||
+                      (errors.password[0].length >= 3 && '#ff5f5f')
+                    }`,
+                  }
+                : {}
+            }
           />
-          {/*<div className={styles.error}>{errors.password?.message}</div>*/}
+          <div className={styles.error}>
+            {(errors.password[0] &&
+              errors.password[0].includes('u') &&
+              'Password must be contain 1 upper letter') ||
+              (errors.password[0] &&
+                errors.password[0].includes('l') &&
+                'Password must be contain 1 lower letter') ||
+              (errors.password[0] &&
+                errors.password[0].includes('s') &&
+                'Password must be contain 1 special character') ||
+              (errors.password[0] &&
+                errors.password[0].includes('d') &&
+                'Password must be contain 1 digit')}
+          </div>
         </label>
 
         <InputField
           inputType='password'
           placeholder='Repeat password'
-          // error={errors.repeatPassword}
+          error={{ message: errors.repeatPassword[0] }}
           labelText='Repeat password'
           name='repeatPassword'
         />
@@ -164,10 +175,7 @@ const UncontrolledForm = () => {
         <label className={styles.label}>
           Gender
           <select
-            className={
-              styles.selectGender + ' '
-              // (errors.gender && styles.invalidField)
-            }
+            className={styles.selectGender + ' ' + (errors.gender[0] && styles.invalidField)}
             name='gender'
             defaultValue={''}
           >
@@ -177,7 +185,7 @@ const UncontrolledForm = () => {
             <option value='male'>male</option>
             <option value='female'>female</option>
           </select>
-          {/*<div className={styles.error}>{errors.gender?.message}</div>*/}
+          <div className={styles.error}>{errors.gender[0]}</div>
         </label>
 
         <label className={styles.label}>
@@ -188,29 +196,25 @@ const UncontrolledForm = () => {
             placeholder='United States, Russia, Canada etc.'
             name='country'
             className={styles.invalidField}
-            // error={errors.country?.message}
+            error={errors.country[0]}
           />
-          {/*<div className={styles.error}>{errors.country?.message}</div>*/}
+          <div className={styles.error}>{errors.country[0]}</div>
         </label>
 
         <label className={styles.label}>
           Upload your image
-          <input
-            type='file'
-            name='image'
-            // className={errors.image && styles.invalidField}
-          />
-          {/*<div className={styles.error}>{errors.image?.message}</div>*/}
+          <input type='file' name='image' className={errors.image[0] && styles.invalidField} />
+          <div className={styles.error}>{errors.image[0]}</div>
         </label>
 
         <label className={`${styles.label} ${styles.t_and_c}`}>
           <input
             type='checkbox'
             name='t_and_c'
-            // className={errors.t_and_c && styles.invalidField}
+            className={errors.t_and_c[0] && styles.invalidField}
           />
           Are you accept term&apos;s and conditions?
-          {/*<div className={styles.error}>{errors.t_and_c?.message}</div>*/}
+          <div className={styles.error}>{errors.t_and_c[0]}</div>
         </label>
 
         <button type='submit' className={styles.actionBtn}>
