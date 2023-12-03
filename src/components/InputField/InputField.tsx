@@ -7,7 +7,7 @@ interface InputFieldProps {
   placeholder: string
   register?: object
   name?: string
-  error: FieldError | undefined
+  error?: FieldError | { message: string } | undefined
   labelText: string
 }
 
@@ -19,7 +19,8 @@ const InputField: FC<InputFieldProps> = (props) => {
         type={props.inputType}
         placeholder={props.placeholder}
         {...props.register}
-        className={props.error && styles.invalidField}
+        name={props.name}
+        className={props.error?.message && styles.invalidField}
       />
       <div className={styles.error}>{props.error?.message}</div>
     </label>

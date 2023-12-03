@@ -1,6 +1,12 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import styles from './UncontrolledForm.module.css';
+import { countries } from '../../assets/countries';
+import InputField from '../InputField/InputField';
+import Autocomplete from '../Autocomplete/Autocomplete';
 import { FormSchema } from '../../utils/yup/yup';
+import { useAppDispatch } from '../../store/hooks/redux';
+import { cardsSlice } from '../../store/reducers/AppSlice';
+import { ValidationError } from 'yup';
 
 interface FormElements extends HTMLFormControlsCollection {
   name: HTMLInputElement
@@ -14,17 +20,46 @@ interface FormElements extends HTMLFormControlsCollection {
   t_and_c: HTMLInputElement
 }
 
+interface InputErrors {
+  name: string[]
+  age: string[]
+  email: string[]
+  password: string[]
+  repeatPassword: string[]
+  gender: string[]
+  country: string[]
+  image: string[]
+  t_and_c: string[]
+}
+
 const UncontrolledForm = () => {
+  const dispatch = useAppDispatch();
+  const { addCard } = cardsSlice.actions;
+
+  const [errors, setErrors] = useState<InputErrors>({
+    name: [],
+    age: [],
+    email: [],
+    password: [],
+    repeatPassword: [],
+    gender: [],
+    country: [],
+    image: [],
+    t_and_c: [],
+  });
+
   const serializeForm = (inputs: FormElements) => {
-    const res: { [key: string]: string | boolean } = {};
-    for (const input of inputs) {
-      const formInput = input as HTMLInputElement;
-      if (formInput.name) {
-        if (formInput.type === 'checkbox') res[formInput.name] = formInput.checked;
-        else res[formInput.name] = formInput.value;
-      }
-    }
-    return res;
+    return {
+      age: inputs.age.value,
+      country: inputs.country.value,
+      email: inputs.email.value,
+      gender: inputs.gender.value,
+      image: inputs.image.files,
+      name: inputs.name.value,
+      password: inputs.password.value,
+      repeatPassword: inputs.repeatPassword.value,
+      t_and_c: inputs.t_and_c.checked,
+    };
   };
 
   const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
@@ -32,76 +67,157 @@ const UncontrolledForm = () => {
     const formData = serializeForm(e.currentTarget.elements as FormElements);
     try {
       FormSchema.validateSync(formData, { abortEarly: false });
-      console.log(formData);
-    } catch (err) {
-      // console.log(err.inner);
+      const FR = new FileReader();
+      formData.image && FR.readAsDataURL(formData.image[0]);
+      FR.onloadend = () => {
+        dispatch(
+          addCard({
+            age: Number(formData.age),
+            country: formData.country,
+            email: formData.email,
+            gender: formData.gender,
+            name: formData.name,
+            password: formData.password,
+            t_and_c: formData.t_and_c,
+            image: FR.result as string,
+          }),
+        );
+      };
+    } catch (e) {
+      const formErrors = e as ValidationError;
+      const er: InputErrors = {
+        name: [],
+        age: [],
+        email: [],
+        password: [],
+        repeatPassword: [],
+        gender: [],
+        country: [],
+        image: [],
+        t_and_c: [],
+      };
+      formErrors.inner.forEach((error) => {
+        er[error.path as keyof InputErrors].push(error.message);
+      });
+      setErrors(er);
     }
   };
 
   return (
-    <form className={styles.form} onSubmit={onSubmitForm}>
-      <label htmlFor='name' className={styles.label}>
-        Name
-      </label>
-      <input type='text' name='name' id='name' placeholder='Name' />
+    <div>
+      <form className={styles.form} onSubmit={onSubmitForm}>
+        <InputField
+          inputType='text'
+          placeholder='Name'
+          error={{ message: errors.name[0] }}
+          labelText='Name'
+          name='name'
+        />
 
-      <label htmlFor='age' className={styles.label}>
-        Age
-      </label>
-      <input type='number' name='age' id='age' placeholder='Age' />
+        <InputField
+          inputType='number'
+          placeholder='Age'
+          error={{ message: errors.age[0] }}
+          labelText='Age'
+          name='age'
+        />
 
-      <label htmlFor='email' className={styles.label}>
-        Email
-      </label>
-      <input type='text' name='email' id='email' placeholder='Email' />
+        <InputField
+          inputType='text'
+          placeholder='Email'
+          // error={errors.email}
+          labelText='Email'
+          name='email'
+        />
 
-      <label htmlFor='password' className={styles.label}>
-        Password
-      </label>
-      <input type='password' name='password' id='password' placeholder='Password' />
-
-      <label htmlFor='repeatPassword' className={styles.label}>
-        Repeat password
-      </label>
-      <input
-        type='password'
-        name='repeatPassword'
-        id='repeatPassword'
-        placeholder='Repeat password'
-      />
-
-      <label htmlFor='gender' className={styles.label}>
-        Gender
-      </label>
-      <select name='gender' id='gender' className={styles.selectGender} size={1}>
-        <option value='male'>male</option>
-        <option value='female'>female</option>
-      </select>
-
-      <label htmlFor='country' className={styles.label}>
-        Choose your country
-      </label>
-      <input
-        type='search'
-        name='country'
-        id='country'
-        placeholder={'United States, Russia, Canada etc.'}
-      />
-
-      <label htmlFor='image' className={styles.label}>
-        Upload your image
-      </label>
-      <input type='file' name='image' id='image' />
-
-      <div className={styles.t_and_c_container}>
-        <input type='checkbox' name='t_and_c' id='t_and_c' />
-        <label htmlFor='t_and_c' className={styles.label}>
-          Are you accept term&apos;s and conditions?
+        <label className={styles.label + ' ' + styles.password}>
+          Password
+          <input
+            type='password'
+            placeholder='Password'
+            name='password'
+            //className={errors.password && styles.invalidField}
+            // style={
+            //   getFieldState('password').isDirty
+            //     ? {
+            //         borderBottom: `5px solid ${
+            //           (!errors.password && '#5bc058') ||
+            //           (errors.password?.message?.length === 1 && '#c0be58') ||
+            //           (errors.password?.message?.length === 2 && '#c08c58') ||
+            //           (errors.password?.message && '#ff5f5f')
+            //         }`,
+            //       }
+            //     : {}
+            // }
+          />
+          {/*<div className={styles.error}>{errors.password?.message}</div>*/}
         </label>
-      </div>
 
-      <button className={styles.actionBtn}>Send</button>
-    </form>
+        <InputField
+          inputType='password'
+          placeholder='Repeat password'
+          // error={errors.repeatPassword}
+          labelText='Repeat password'
+          name='repeatPassword'
+        />
+
+        <label className={styles.label}>
+          Gender
+          <select
+            className={
+              styles.selectGender + ' '
+              // (errors.gender && styles.invalidField)
+            }
+            name='gender'
+            defaultValue={''}
+          >
+            <option value='' disabled hidden>
+              Select gender
+            </option>
+            <option value='male'>male</option>
+            <option value='female'>female</option>
+          </select>
+          {/*<div className={styles.error}>{errors.gender?.message}</div>*/}
+        </label>
+
+        <label className={styles.label}>
+          Choose your country
+          <Autocomplete
+            data={countries}
+            inputType='search'
+            placeholder='United States, Russia, Canada etc.'
+            name='country'
+            className={styles.invalidField}
+            // error={errors.country?.message}
+          />
+          {/*<div className={styles.error}>{errors.country?.message}</div>*/}
+        </label>
+
+        <label className={styles.label}>
+          Upload your image
+          <input
+            type='file'
+            name='image'
+            // className={errors.image && styles.invalidField}
+          />
+          {/*<div className={styles.error}>{errors.image?.message}</div>*/}
+        </label>
+
+        <label className={`${styles.label} ${styles.t_and_c}`}>
+          <input
+            type='checkbox'
+            name='t_and_c'
+            // className={errors.t_and_c && styles.invalidField}
+          />
+          Are you accept term&apos;s and conditions?
+          {/*<div className={styles.error}>{errors.t_and_c?.message}</div>*/}
+        </label>
+
+        <button type='submit' className={styles.actionBtn}>
+          Send
+        </button>
+      </form>
+    </div>
   );
 };
 

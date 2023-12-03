@@ -18,6 +18,7 @@ const Autocomplete: FC<AutocompleteProps> = (props) => {
         placeholder={props.placeholder}
         autoComplete='nope'
         list='dataAutocomplete'
+        name={props.name}
         {...props.register}
         className={props.error && props.className}
       />
