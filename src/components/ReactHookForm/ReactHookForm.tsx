@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../UncontrolledForm/UncontrolledForm.module.css';
+import styles from './ReactHookForm.module.css';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormSchema } from '../../utils/yup/yup';
@@ -101,7 +101,6 @@ const ReactHookForm = () => {
           Gender
           <select
             className={styles.selectGender + ' ' + (errors.gender && styles.invalidField)}
-            size={1}
             {...register('gender')}
             defaultValue={''}
           >

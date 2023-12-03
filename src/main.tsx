@@ -8,17 +8,18 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import HomePage from './pages/Home/HomePage';
-import ReactHookFormPage from './pages/ReactHookForm/ReactHookFormPage';
-import UncontrolledFormPage from './pages/UncontrolledForm/UncontrolledFormPage';
 import { Provider } from 'react-redux';
 import { setupStore } from './store/store';
+import CardList from './components/CardList/CardList';
+import ReactHookForm from './components/ReactHookForm/ReactHookForm';
+import UncontrolledForm from './components/UncontrolledForm/UncontrolledForm';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/'>
-      <Route path='/' element={<HomePage />} />
-      <Route path={'/react-hook-form'} element={<ReactHookFormPage />} />
-      <Route path='/uncontrolled-form' element={<UncontrolledFormPage />} />
+    <Route path='/' element={<HomePage />}>
+      <Route path={'/'} element={<CardList />} />
+      <Route path={'/react-hook-form'} element={<ReactHookForm />} />
+      <Route path='/uncontrolled-form' element={<UncontrolledForm />} />
     </Route>,
   ),
 );

@@ -104,3 +104,10 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     background-color: #252525;
 }
+
+h1 {
+    color: white;
+    font-size: 45px;
+    font-weight: 700;
+    padding: 20px;
+}
