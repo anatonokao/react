@@ -6,14 +6,28 @@
     border-radius: 10px;
 }
 
+.label {
+    display: flex;
+    flex-direction: column;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: normal;
+    color: #cccccc;
+    position: relative;
+    margin-bottom: 20px;
+}
+
 input, .selectGender {
     padding: 10px;
     font-size: 17px;
+    font-weight: 400;
     border-radius: 10px;
     background-color: #575757;
     color: #eeeeee;
     transition: all .3s ease;
-    margin: 5px 0 10px 0;
+    margin: 5px 0 0;
+    transition: all .3s ease;
+    border-bottom: 3px solid transparent;
 }
 
 input:focus {
@@ -21,22 +35,11 @@ input:focus {
     background-color: #d9d9d9;
 }
 
-
-.label {
-    font-size: 20px;
-    font-weight: 600;
-    line-height: normal;
-    color: #cccccc;
-}
-
-.t_and_c_container {
+.t_and_c {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: baseline;
     gap: 10px;
-    margin: 20px 0;
-}
-
-.t_and_c_container label {
     line-height: normal;
     font-size: 16px;
 }
@@ -51,4 +54,19 @@ input:focus {
     color: #e1e1e1;
     background-color: #626262;
     margin: 0 auto;
+}
+
+.invalidField {
+    border-bottom: 3px solid #ff5f5f;
+}
+
+.error {
+    bottom: 0;
+    line-height: normal;
+    transform: translateY(120%);
+    position: absolute;
+    font-size: 14px;
+    font-weight: 200;
+    padding-left: 10px;
+    color: #f55555;
 }
