@@ -34,7 +34,7 @@ const UncontrolledForm = () => {
       FormSchema.validateSync(formData, { abortEarly: false });
       console.log(formData);
     } catch (err) {
-      console.log(err.inner);
+      // console.log(err.inner);
     }
   };
 

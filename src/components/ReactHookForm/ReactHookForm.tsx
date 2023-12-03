@@ -3,6 +3,8 @@ import styles from '../UncontrolledForm/UncontrolledForm.module.css';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormSchema } from '../../utils/yup/yup';
+import { useAppDispatch } from '../../store/hooks/redux';
+import { cardsSlice } from '../../store/reducers/AppSlice';
 
 interface IFormFields {
   name: string
@@ -17,15 +19,24 @@ interface IFormFields {
 }
 
 const ReactHookForm = () => {
+  const dispatch = useAppDispatch();
+  const { addCard } = cardsSlice.actions;
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormFields>({ mode: 'all', resolver: yupResolver(FormSchema) });
-  const onSubmit: SubmitHandler<IFormFields> = (data) => {
+  const onSubmit: SubmitHandler<IFormFields> = async (data) => {
     const FR = new FileReader();
     FR.readAsDataURL(data.image[0]);
-    FR.onloadend = () => console.log(FR.result, data);
+    FR.onloadend = () =>
+      dispatch(
+        addCard({
+          ...data,
+          image: FR.result as string,
+        }),
+      );
   };
 
   return (
