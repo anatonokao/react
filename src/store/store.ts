@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import cardsReducer from './reducers/AppSlice';
+import { countries } from '../assets/countries';
 
 const rootReducer = combineReducers({
   cardsReducer,
+  countries: () => countries,
 });
 
 export const setupStore = () => {

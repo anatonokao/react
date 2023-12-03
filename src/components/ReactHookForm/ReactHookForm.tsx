@@ -3,7 +3,7 @@ import styles from './ReactHookForm.module.css';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormSchema } from '../../utils/yup/yup';
-import { useAppDispatch } from '../../store/hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import { cardsSlice } from '../../store/reducers/AppSlice';
 
 interface IFormFields {
@@ -21,11 +21,12 @@ interface IFormFields {
 const ReactHookForm = () => {
   const dispatch = useAppDispatch();
   const { addCard } = cardsSlice.actions;
+  const countries = useAppSelector((state) => state.countries);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<IFormFields>({ mode: 'all', resolver: yupResolver(FormSchema) });
   const onSubmit: SubmitHandler<IFormFields> = async (data) => {
     const FR = new FileReader();
@@ -116,10 +117,17 @@ const ReactHookForm = () => {
           <input
             type='search'
             placeholder={'United States, Russia, Canada etc.'}
+            autoComplete='nope'
+            list='countries'
             {...register('country')}
             className={errors.country && styles.invalidField}
           />
           <div className={styles.error}>{errors.country?.message}</div>
+          <datalist id='countries'>
+            {countries.map((country, index) => (
+              <option key={index} value={country}></option>
+            ))}
+          </datalist>
         </label>
 
         <label className={styles.label}>
@@ -142,10 +150,11 @@ const ReactHookForm = () => {
           <div className={styles.error}>{errors.t_and_c?.message}</div>
         </label>
 
-        <button className={styles.actionBtn}>Send</button>
+        <button disabled={!isValid} className={styles.actionBtn}>
+          Send
+        </button>
       </form>
     </div>
   );
 };
-
 export default ReactHookForm;

@@ -2,11 +2,12 @@
     display: flex;
     flex-direction: column;
     background-color: #3f3f3f;
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
 }
 
 .label {
+    padding-left: 5px;
     display: flex;
     flex-direction: column;
     font-size: 20px;
@@ -14,10 +15,10 @@
     line-height: normal;
     color: #cccccc;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-input, .selectGender {
+.label input, .selectGender {
     padding: 10px;
     font-size: 17px;
     font-weight: 400;
@@ -25,7 +26,7 @@ input, .selectGender {
     background-color: #575757;
     color: #eeeeee;
     transition: all .3s ease;
-    margin: 5px 0 0;
+    margin: 7px 0 0 -5px;
     transition: all .3s ease;
     border-bottom: 3px solid transparent;
 }
@@ -45,18 +46,30 @@ input:focus {
 }
 
 .actionBtn {
-    width: 160px;
-    font-size: 19px;
-    padding: 15px;
+    width: 130px;
+    font-size: 15px;
+    padding: 10px;
     font-weight: 600;
     border-radius: 10px;
     text-transform: uppercase;
     color: #e1e1e1;
     background-color: #626262;
-    margin: 0 auto;
+    margin: 10px auto;
+    transition: all .3s ease;
 }
 
-.invalidField {
+.actionBtn:hover {
+    color: #1e1e1e;
+    background-color: #d2d2d2;
+}
+
+.actionBtn:disabled {
+    color: #bebebe;
+    background-color: #464646;
+    cursor: auto;
+}
+
+input.invalidField {
     border-bottom: 3px solid #ff5f5f;
 }
 
@@ -65,8 +78,7 @@ input:focus {
     line-height: normal;
     transform: translateY(120%);
     position: absolute;
-    font-size: 14px;
-    font-weight: 200;
-    padding-left: 10px;
-    color: #f55555;
+    font-size: 15px;
+    font-weight: 400;
+    color: #ec5252;
 }
